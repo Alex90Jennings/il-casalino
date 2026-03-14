@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design Tokens
+--------------------------------------------------------------------------- */
+:root {
+  /* Colours */
+  --color-cream: #fafaf8;
+  --color-charcoal: #2b2b2b;
+  --color-stone: #9c8f82;
+  --color-stone-light: #c5bdb6;
+  --color-nav: #1e1e1e;
+
+  /* Fonts */
+  --font-serif: var(--font-cormorant);
+  --font-sans: var(--font-inter);
+}
+
+@theme inline {
+  --color-cream: var(--color-cream);
+  --color-charcoal: var(--color-charcoal);
+  --color-stone: var(--color-stone);
+  --color-stone-light: var(--color-stone-light);
+  --color-nav: var(--color-nav);
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+}
+
+/* ---------------------------------------------------------------------------
+   Base Styles
+--------------------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-charcoal);
+  font-family: var(--font-sans), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---------------------------------------------------------------------------
+   Typography Helpers
+--------------------------------------------------------------------------- */
+.font-serif {
+  font-family: var(--font-serif), Georgia, serif;
+}
+
+/* Smooth image loading */
+img {
+  display: block;
+}
