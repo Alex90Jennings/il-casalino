@@ -3,7 +3,6 @@ import { Footer } from "@/components/layout/Footer";
 import { FloatingSidebar } from "@/components/ui/FloatingSidebar";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { AboutSection } from "@/components/sections/AboutSection";
-import { RoomsSection } from "@/components/sections/RoomsSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { GallerySection } from "@/components/sections/GallerySection";
 import { BookingSection } from "@/components/sections/BookingSection";
@@ -17,7 +16,6 @@ export default function Home() {
       <main>
         <HeroSection />
         <AboutSection />
-        <RoomsSection />
         <ServicesSection />
         <GallerySection />
         <BookingSection />

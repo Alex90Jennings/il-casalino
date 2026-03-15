@@ -2,7 +2,6 @@ export const it = {
   nav: {
     home: "Home",
     about: "Chi Siamo",
-    rooms: "Le Stanze",
     services: "Servizi",
     gallery: "Galleria",
     booking: "Prenota",
