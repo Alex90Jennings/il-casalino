@@ -4,14 +4,12 @@
    Design Tokens
 --------------------------------------------------------------------------- */
 :root {
-  /* Colours */
   --color-cream: #fafaf8;
   --color-charcoal: #2b2b2b;
   --color-stone: #9c8f82;
   --color-stone-light: #c5bdb6;
   --color-nav: #1e1e1e;
 
-  /* Fonts */
   --font-serif: var(--font-cormorant);
   --font-sans: var(--font-inter);
 }
@@ -27,12 +25,8 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Base Styles
+   Base
 --------------------------------------------------------------------------- */
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   background-color: var(--color-cream);
   color: var(--color-charcoal);
@@ -41,14 +35,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Scroll is handled by JS easeInOutQuart — do not set scroll-behavior here */
+
+img {
+  display: block;
+}
+
 /* ---------------------------------------------------------------------------
-   Typography Helpers
+   Typography helpers
 --------------------------------------------------------------------------- */
 .font-serif {
   font-family: var(--font-serif), Georgia, serif;
-}
-
-/* Smooth image loading */
-img {
-  display: block;
 }

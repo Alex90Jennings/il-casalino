@@ -3,15 +3,16 @@
 import { useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageToggle } from "@/components/ui/LanguageToggle";
+import { scrollToSection } from "@/lib/scroll";
 
 const NAV_SECTIONS = [
-  "home",
-  "about",
-  "rooms",
-  "services",
-  "gallery",
-  "booking",
-  "contact",
+  { key: "home" as const, sectionId: "hero" },
+  { key: "about" as const, sectionId: "about" },
+  { key: "rooms" as const, sectionId: "rooms" },
+  { key: "services" as const, sectionId: "services" },
+  { key: "gallery" as const, sectionId: "gallery" },
+  { key: "booking" as const, sectionId: "booking" },
+  { key: "contact" as const, sectionId: "contact" },
 ] as const;
 
 interface MobileMenuProps {
@@ -23,66 +24,54 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { t } = useLanguage();
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 
   const handleNav = (sectionId: string) => {
     onClose();
-    const el = document.getElementById(sectionId);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    // Brief delay lets the menu close before scroll starts
+    setTimeout(() => scrollToSection(sectionId), 120);
   };
 
   return (
     <>
-      {/* Backdrop */}
       <div
-        className={`fixed inset-0 z-40 bg-black/60 transition-opacity duration-300 ${
+        className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${
           isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         onClick={onClose}
       />
-
-      {/* Drawer */}
       <div
-        className={`fixed inset-y-0 right-0 z-50 w-72 bg-nav flex flex-col transition-transform duration-300 ${
+        className={`fixed inset-y-0 right-0 z-50 w-64 bg-nav flex flex-col transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* Close button */}
-        <div className="flex justify-end p-6">
+        <div className="flex justify-end p-5">
           <button
             onClick={onClose}
             aria-label="Close menu"
-            className="text-white/70 hover:text-white transition-colors"
+            className="text-white/60 hover:text-white transition-colors"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        {/* Nav links */}
-        <nav className="flex flex-col gap-2 px-8 flex-1">
-          {NAV_SECTIONS.map((key) => (
+        <nav className="flex flex-col gap-1 px-7 flex-1">
+          {NAV_SECTIONS.map(({ key, sectionId }) => (
             <button
               key={key}
-              onClick={() => handleNav(key === "home" ? "hero" : key)}
-              className="text-left text-sm tracking-[0.15em] uppercase text-white/80 hover:text-white py-3 border-b border-white/10 transition-colors"
+              onClick={() => handleNav(sectionId)}
+              className="text-left text-[11px] tracking-[0.18em] uppercase text-white/70 hover:text-white py-3 border-b border-white/8 transition-colors"
             >
               {t.nav[key]}
             </button>
           ))}
         </nav>
 
-        {/* Language toggle */}
-        <div className="px-8 py-8">
+        <div className="px-7 py-8">
           <LanguageToggle />
         </div>
       </div>
