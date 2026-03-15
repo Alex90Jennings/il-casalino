@@ -1,31 +1,92 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
+import type { Room } from "@/types/room";
 
-const GALLERY_IMAGES = [
-  { src: "/images/gallery/1.jpg", alt: "Il Casino Casalino" },
-  { src: "/images/gallery/2.jpg", alt: "Camera Mirtillo" },
-  { src: "/images/gallery/3.jpg", alt: "Camera Limone" },
-  { src: "/images/gallery/4.jpg", alt: "Giardino" },
-  { src: "/images/gallery/5.jpg", alt: "Colazione" },
-  { src: "/images/gallery/6.jpg", alt: "Camera Oria" },
-];
+// ---------------------------------------------------------------------------
+// Image manifest — property shots first, then per-room pairs
+// ---------------------------------------------------------------------------
+const SLIDES = [
+  { src: "/images/drawing-room3.webp",       labelIt: "Il Salone",       labelEn: "The Salon",      pos: "object-center" },
+  { src: "/images/profile-mobile.webp",      labelIt: "Vista esterna",   labelEn: "Exterior",       pos: "object-top"    },
+  { src: "/images/garden.webp",              labelIt: "Giardino",        labelEn: "Garden",         pos: "object-center" },
+  { src: "/images/breakfast.jpg",            labelIt: "Colazione",       labelEn: "Breakfast",      pos: "object-center" },
+  { src: "/images/table.webp",               labelIt: "Terrazza",        labelEn: "Terrace",        pos: "object-center" },
+  { src: "/images/bathroom-suite.webp",      labelIt: "Suite",           labelEn: "Suite",          pos: "object-center" },
+  // Mirtillo — indices 6–7
+  { src: "/images/mirtillo.jpeg",            labelIt: "Mirtillo",        labelEn: "Mirtillo",       pos: "object-center" },
+  { src: "/images/mirtillo-bathroom.jpeg",   labelIt: "Bagno Mirtillo",  labelEn: "Mirtillo Bath",  pos: "object-center" },
+  // Limone — indices 8–9
+  { src: "/images/lemon.jpeg",               labelIt: "Limone",          labelEn: "Limone",         pos: "object-center" },
+  { src: "/images/limone-bathroom.jpeg",     labelIt: "Bagno Limone",    labelEn: "Limone Bath",    pos: "object-center" },
+  // Oria — indices 10–11
+  { src: "/images/oria.jpeg",                labelIt: "Oria",            labelEn: "Oria",           pos: "object-center" },
+  { src: "/images/oria-bathroom.jpeg",       labelIt: "Bagno Oria",      labelEn: "Oria Bath",      pos: "object-center" },
+  // Francavilla — indices 12–13
+  { src: "/images/francavilla.jpeg",         labelIt: "Francavilla",     labelEn: "Francavilla",    pos: "object-center" },
+  { src: "/images/francavilla-bathroom.jpg", labelIt: "Bagno Francavilla", labelEn: "Francavilla Bath", pos: "object-center" },
+] as const;
+
+const TOTAL = SLIDES.length; // 14
+
+// First image index in the gallery for each room — used by booking link
+const ROOM_SLIDE_INDEX: Record<Room, number> = {
+  Mirtillo: 6,
+  Limone: 8,
+  Oria: 10,
+  Francavilla: 12,
+};
+
+// Slide takes 76% of container width; 12% peeks each side
+const SLIDE_RATIO = 0.76;
+const GAP = 16; // px between slides
+
+function normalizeOffset(i: number, current: number, total: number): number {
+  let offset = i - current;
+  if (offset > total / 2) offset -= total;
+  if (offset < -total / 2) offset += total;
+  return offset;
+}
 
 export function GallerySection() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [current, setCurrent] = useState(0);
-  const total = GALLERY_IMAGES.length;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerW, setContainerW] = useState(0);
 
-  // Touch / pointer tracking for swipe
+  // Measure container width
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const measure = () => setContainerW(el.offsetWidth);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const slideW = containerW * SLIDE_RATIO;
+  const centerX = (containerW - slideW) / 2;
+
+  const prev = useCallback(() => setCurrent((i) => (i - 1 + TOTAL) % TOTAL), []);
+  const next = useCallback(() => setCurrent((i) => (i + 1) % TOTAL), []);
+
+  // Booking → gallery link: listen for room-focus events
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const room = (e as CustomEvent<{ room: Room }>).detail.room;
+      const idx = ROOM_SLIDE_INDEX[room];
+      if (idx !== undefined) setCurrent(idx);
+    };
+    window.addEventListener("casalino:room-focus", handler);
+    return () => window.removeEventListener("casalino:room-focus", handler);
+  }, []);
+
+  // Pointer / swipe
   const dragStartX = useRef<number | null>(null);
-
-  const prev = useCallback(() => setCurrent((i) => (i - 1 + total) % total), [total]);
-  const next = useCallback(() => setCurrent((i) => (i + 1) % total), [total]);
-
-  const onPointerDown = (e: React.PointerEvent) => {
-    dragStartX.current = e.clientX;
-  };
+  const onPointerDown = (e: React.PointerEvent) => { dragStartX.current = e.clientX; };
   const onPointerUp = (e: React.PointerEvent) => {
     if (dragStartX.current === null) return;
     const delta = e.clientX - dragStartX.current;
@@ -34,128 +95,138 @@ export function GallerySection() {
   };
 
   return (
-    <section id="gallery" className="bg-cream py-16 md:py-24 overflow-hidden">
+    <section id="gallery" className="bg-cream pt-12 pb-8 md:pt-16 md:pb-10 overflow-hidden">
       {/* Heading */}
-      <div className="text-center mb-10 px-6">
+      <div className="text-center mb-8 px-6">
         <h2 className="font-serif text-2xl md:text-3xl font-light tracking-[0.1em] uppercase text-charcoal mb-5">
           {t.gallery.heading}
         </h2>
         <div className="w-8 h-px bg-stone-light mx-auto" />
       </div>
 
-      {/* Carousel — prev/next peek at the sides */}
-      <div
-        className="relative select-none"
-        onPointerDown={onPointerDown}
-        onPointerUp={onPointerUp}
-      >
-        {/* Track */}
+      {/* Carousel — constrained width so peek is proportional */}
+      <div className="max-w-5xl mx-auto">
+        {/*
+          pb-[57%] = SLIDE_RATIO (0.76) × aspect-ratio height factor (0.75) × 100
+          This gives the container intrinsic height without JS.
+          Slides are absolutely positioned inside it.
+          The section's overflow-hidden clips the horizontal peek.
+        */}
         <div
-          className="flex items-center"
-          style={{
-            // Each slide is 78vw on mobile, 60vw on desktop (set via CSS var below)
-          }}
+          ref={containerRef}
+          className="relative"
+          style={{ paddingBottom: "57%" }}
+          onPointerDown={onPointerDown}
+          onPointerUp={onPointerUp}
         >
-          {/* Slides */}
-          <div className="w-full flex justify-center">
-            <div className="relative w-full max-w-[1400px] flex items-center justify-center">
-              {GALLERY_IMAGES.map((img, i) => {
-                const offset = i - current;
-                // Normalise for wrap-around
-                const wrappedOffset =
-                  offset > total / 2 ? offset - total :
-                  offset < -total / 2 ? offset + total : offset;
+          {containerW > 0 &&
+            SLIDES.map((slide, i) => {
+              const offset = normalizeOffset(i, current, TOTAL);
+              // Render current + one on each side + one more for pre-positioning during transition
+              if (Math.abs(offset) > 2) return null;
 
-                const isActive = wrappedOffset === 0;
-                const isPrev = wrappedOffset === -1;
-                const isNext = wrappedOffset === 1;
-                const visible = Math.abs(wrappedOffset) <= 1;
+              const translateX = centerX + offset * (slideW + GAP);
+              const isActive = offset === 0;
+              const isAdjacent = Math.abs(offset) === 1;
 
-                if (!visible) return null;
-
-                return (
-                  <div
-                    key={img.src}
-                    className="absolute transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
-                    style={{
-                      width: isActive ? "clamp(280px, 60vw, 820px)" : "clamp(100px, 18vw, 240px)",
-                      aspectRatio: "4/3",
-                      zIndex: isActive ? 10 : 5,
-                      opacity: isActive ? 1 : 0.45,
-                      transform: isActive
-                        ? "translateX(0) scale(1)"
-                        : isPrev
-                        ? "translateX(calc(-50vw * 0.52)) scale(0.92)"
-                        : "translateX(calc(50vw * 0.52)) scale(0.92)",
-                      cursor: isActive ? "default" : "pointer",
-                    }}
-                    onClick={() => {
-                      if (isPrev) prev();
-                      if (isNext) next();
-                    }}
-                  >
-                    <div
-                      className="w-full h-full bg-cover bg-center bg-stone/10"
-                      style={{ backgroundImage: `url('${img.src}')` }}
-                      role="img"
-                      aria-label={img.alt}
+              return (
+                <div
+                  key={slide.src}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    height: "100%",
+                    width: `${slideW}px`,
+                    transform: `translateX(${translateX}px)`,
+                    transition: "transform 550ms cubic-bezier(0.4,0,0.2,1), opacity 400ms ease, filter 400ms ease",
+                    opacity: isActive ? 1 : isAdjacent ? 0.55 : 0,
+                    filter: isActive ? "brightness(1)" : "brightness(0.72)",
+                    zIndex: isActive ? 2 : 1,
+                    cursor: isAdjacent ? "pointer" : "default",
+                  }}
+                  onClick={() => {
+                    if (offset < 0) prev();
+                    if (offset > 0) next();
+                  }}
+                >
+                  <div className="relative w-full h-full overflow-hidden">
+                    <Image
+                      src={slide.src}
+                      alt={locale === "it" ? slide.labelIt : slide.labelEn}
+                      fill
+                      className={`object-cover ${slide.pos} select-none`}
+                      draggable={false}
+                      sizes="(max-width: 768px) 85vw, 70vw"
                     />
-                    {/* Placeholder label */}
-                    <div className="absolute inset-0 flex items-end justify-center pb-3 pointer-events-none">
-                      {isActive && (
-                        <span className="text-[10px] tracking-[0.2em] uppercase text-white/70 bg-charcoal/30 px-3 py-1 backdrop-blur-sm">
-                          {img.alt}
+                    {/* Subtle edge vignette on active slide */}
+                    {isActive && (
+                      <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          background:
+                            "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.15) 100%)",
+                        }}
+                      />
+                    )}
+                    {/* Caption on active slide */}
+                    {isActive && (
+                      <div className="absolute bottom-0 left-0 right-0 flex justify-center pb-3 pointer-events-none">
+                        <span className="text-[9px] tracking-[0.22em] uppercase text-white/75 bg-charcoal/20 px-3 py-1 backdrop-blur-sm">
+                          {locale === "it" ? slide.labelIt : slide.labelEn}
                         </span>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
-                );
-              })}
-            </div>
-          </div>
+                </div>
+              );
+            })}
+
+          {/* Arrow buttons */}
+          <button
+            onClick={prev}
+            aria-label="Previous image"
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center text-white/80 hover:text-white bg-charcoal/25 hover:bg-charcoal/45 backdrop-blur-sm transition-all rounded-full"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </button>
+          <button
+            onClick={next}
+            aria-label="Next image"
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center text-white/80 hover:text-white bg-charcoal/25 hover:bg-charcoal/45 backdrop-blur-sm transition-all rounded-full"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
         </div>
-
-        {/* Spacer to give the carousel block height */}
-        <div
-          className="pointer-events-none"
-          style={{ paddingBottom: "min(45vw, 620px)", maxWidth: "1400px", margin: "0 auto" }}
-        />
-
-        {/* Prev / Next arrow buttons */}
-        <button
-          onClick={prev}
-          aria-label="Previous image"
-          className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-9 h-9 flex items-center justify-center text-charcoal/40 hover:text-charcoal transition-colors"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.2} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-          </svg>
-        </button>
-        <button
-          onClick={next}
-          aria-label="Next image"
-          className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-9 h-9 flex items-center justify-center text-charcoal/40 hover:text-charcoal transition-colors"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.2} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-          </svg>
-        </button>
       </div>
 
-      {/* Dot indicators */}
-      <div className="flex justify-center gap-2 mt-6">
-        {GALLERY_IMAGES.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            aria-label={`Go to image ${i + 1}`}
-            className={`transition-all duration-300 rounded-full ${
-              i === current
-                ? "w-4 h-1.5 bg-stone"
-                : "w-1.5 h-1.5 bg-stone-light hover:bg-stone"
-            }`}
-          />
-        ))}
+      {/* Dot indicators — windowed to max 9 visible */}
+      <div className="flex justify-center items-center gap-1.5 mt-5">
+        {SLIDES.map((_, i) => {
+          const dist = Math.abs(i - current);
+          // Show all dots; scale down distant ones for a windowed feel
+          const isActive = i === current;
+          const isNear = dist <= 1;
+          return (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              aria-label={`Image ${i + 1}`}
+              className="transition-all duration-300 rounded-full flex-shrink-0"
+              style={{
+                width: isActive ? "16px" : isNear ? "6px" : "4px",
+                height: isActive ? "6px" : "4px",
+                backgroundColor: isActive
+                  ? "var(--color-stone)"
+                  : "var(--color-stone-light)",
+                opacity: dist > 4 ? 0.4 : 1,
+              }}
+            />
+          );
+        })}
       </div>
     </section>
   );

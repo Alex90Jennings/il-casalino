@@ -1,13 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import { ROOMS } from "@/types/room";
 
 const ROOM_IMAGES: Record<string, string> = {
-  Mirtillo: "/images/rooms/mirtillo/main.jpg",
-  Limone: "/images/rooms/limone/main.jpg",
-  Oria: "/images/rooms/oria/main.jpg",
-  Francavilla: "/images/rooms/francavilla/main.jpg",
+  Mirtillo: "/images/mirtillo.jpeg",
+  Limone: "/images/lemon.jpeg",
+  Oria: "/images/oria.jpeg",
+  Francavilla: "/images/francavilla.jpeg",
 };
 
 export function RoomsSection() {
@@ -17,7 +18,6 @@ export function RoomsSection() {
   return (
     <section id="rooms" className="bg-white py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-6">
-        {/* Section heading */}
         <div className="text-center mb-12">
           <h2 className="font-serif text-2xl md:text-3xl font-light tracking-[0.1em] uppercase text-charcoal mb-5">
             {t.rooms.heading}
@@ -28,20 +28,21 @@ export function RoomsSection() {
           </p>
         </div>
 
-        {/* Room grid — 2 cols on tablet, 4 on desktop */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-stone-light/20">
           {ROOMS.map((room) => (
             <article key={room} className="bg-white group">
-              {/* Image */}
+              {/* Image with subtle bottom vignette */}
               <div className="relative aspect-[3/4] overflow-hidden bg-stone/10">
-                <div
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-[1.03]"
-                  style={{ backgroundImage: `url('${ROOM_IMAGES[room]}')` }}
-                  role="img"
-                  aria-label={`Camera ${room}`}
+                <Image
+                  src={ROOM_IMAGES[room]}
+                  alt={`Camera ${room} — Il Casino Casalino, Francavilla Fontana`}
+                  fill
+                  className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 />
+                {/* Subtle bottom gradient so the room name reads well */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
               </div>
-              {/* Text */}
               <div className="px-5 py-5">
                 <h3 className="font-serif text-lg font-light tracking-widest uppercase text-charcoal mb-1">
                   {room}

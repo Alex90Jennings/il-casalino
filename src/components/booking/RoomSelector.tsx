@@ -17,6 +17,10 @@ export function RoomSelector({ rooms, selected, onChange }: RoomSelectorProps) {
       onChange(selected.filter((r) => r !== room));
     } else {
       onChange([...selected, room]);
+      // Smoothly focus the gallery on this room's images
+      window.dispatchEvent(
+        new CustomEvent("casalino:room-focus", { detail: { room } })
+      );
     }
   };
 

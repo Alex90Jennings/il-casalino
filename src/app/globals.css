@@ -27,6 +27,12 @@
 /* ---------------------------------------------------------------------------
    Base
 --------------------------------------------------------------------------- */
+html,
+body {
+  /* Prevent any component from creating a horizontal scrollbar */
+  overflow-x: hidden;
+}
+
 body {
   background-color: var(--color-cream);
   color: var(--color-charcoal);
@@ -35,7 +41,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scroll is handled by JS easeInOutQuart — do not set scroll-behavior here */
+/* Scroll handled by JS easeInOutQuart — do not set scroll-behavior here */
 
 img {
   display: block;
