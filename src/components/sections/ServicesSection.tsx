@@ -44,7 +44,7 @@ export function ServicesSection() {
   const { t } = useLanguage();
 
   return (
-    <section id="services" className="bg-cream py-16 md:py-24">
+    <section id="services" className="bg-white py-16 md:py-24">
       <div className="max-w-5xl mx-auto px-6">
         {/* Heading */}
         <div className="text-center mb-14">

@@ -20,13 +20,13 @@ export function HeroSection() {
             priority
           />
         </div>
-        <p className="text-[10px] tracking-[0.3em] uppercase text-stone mb-3">
+        <p className="text-[11px] tracking-[0.3em] uppercase text-stone mb-3">
           {t.hero.tagline}
         </p>
         <h1 className="font-serif text-4xl md:text-5xl font-light tracking-[0.12em] text-charcoal uppercase mb-3">
           Il Casino Casalino
         </h1>
-        <p className="text-xs font-serif italic text-stone/80 tracking-[0.12em]">
+        <p className="text-sm font-serif italic text-stone/80 tracking-[0.12em]">
           Francavilla Fontana, Puglia
         </p>
       </div>
