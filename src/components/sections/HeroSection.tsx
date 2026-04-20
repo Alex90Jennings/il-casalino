@@ -34,8 +34,8 @@ export function HeroSection() {
       {/* Contained hero image with subtle edge vignette */}
       <div className="relative w-full aspect-[16/7] md:aspect-[21/8] overflow-hidden">
         <Image
-          src="/images/profile.webp"
-          alt="Il Casino Casalino — cortile esterno"
+          src="/images/gate-entrance.jpg"
+          alt="Il Casino Casalino — ingresso della proprietà"
           fill
           className="object-cover object-center"
           priority

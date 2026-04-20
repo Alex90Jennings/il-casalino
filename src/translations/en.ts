@@ -26,17 +26,17 @@ export const en: Translations = {
     from: "From",
     perNight: "per night",
     discover: "Discover",
-    Mirtillo: {
-      description: "Wrapped in the hues of wild blueberry, this room welcomes you with warmth and intimacy.",
+    Stella: {
+      description: "Bright and serene, Star welcomes you with soft light and an atmosphere of elevated calm.",
     },
-    Limone: {
-      description: "Bright and fresh like the Puglian sun, inspired by the scent of lemons from the garden.",
+    Luna: {
+      description: "Wrapped in gentle lunar tones, Moon invites deep rest and quiet intimacy.",
     },
-    Oria: {
-      description: "Elegant and peaceful, named after the historic Messapian town nearby.",
+    Venere: {
+      description: "Refined and graceful, Venus celebrates beauty in the details and effortless comfort.",
     },
-    Francavilla: {
-      description: "The most spacious room, dedicated to the baroque city that hosts us.",
+    Marte: {
+      description: "The most spacious room, Mars offers character and presence in a space of authentic charm.",
     },
   },
   services: {
@@ -72,6 +72,8 @@ export const en: Translations = {
   booking: {
     heading: "Book Your Stay",
     subtitle: "Minimum stay 3 nights",
+    comingSoonHeading: "Direct booking coming soon",
+    comingSoonBody: "We're preparing our direct booking experience. In the meantime, contact us directly for availability and rates.",
     selectRooms: "Select room(s)",
     checkIn: "Check-in",
     checkOut: "Check-out",

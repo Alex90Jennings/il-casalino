@@ -16,10 +16,10 @@ import { relations } from "drizzle-orm";
 // ---------------------------------------------------------------------------
 
 export const roomEnum = pgEnum("room", [
-  "Mirtillo",
-  "Limone",
-  "Oria",
-  "Francavilla",
+  "Stella",
+  "Luna",
+  "Venere",
+  "Marte",
 ]);
 
 export const bookingStatusEnum = pgEnum("booking_status", [

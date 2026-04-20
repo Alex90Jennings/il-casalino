@@ -9,34 +9,30 @@ import type { Room } from "@/types/room";
 // Image manifest — property shots first, then per-room pairs
 // ---------------------------------------------------------------------------
 const SLIDES = [
-  { src: "/images/drawing-room3.webp",       labelIt: "Il Salone",       labelEn: "The Salon",      pos: "object-center" },
-  { src: "/images/profile-mobile.webp",      labelIt: "Vista esterna",   labelEn: "Exterior",       pos: "object-top"    },
-  { src: "/images/garden.webp",              labelIt: "Giardino",        labelEn: "Garden",         pos: "object-center" },
-  { src: "/images/breakfast.jpg",            labelIt: "Colazione",       labelEn: "Breakfast",      pos: "object-center" },
-  { src: "/images/table.webp",               labelIt: "Terrazza",        labelEn: "Terrace",        pos: "object-center" },
-  { src: "/images/bathroom-suite.webp",      labelIt: "Suite",           labelEn: "Suite",          pos: "object-center" },
-  // Mirtillo — indices 6–7
-  { src: "/images/mirtillo.jpeg",            labelIt: "Mirtillo",        labelEn: "Mirtillo",       pos: "object-center" },
-  { src: "/images/mirtillo-bathroom.jpeg",   labelIt: "Bagno Mirtillo",  labelEn: "Mirtillo Bath",  pos: "object-center" },
-  // Limone — indices 8–9
-  { src: "/images/lemon.jpeg",               labelIt: "Limone",          labelEn: "Limone",         pos: "object-center" },
-  { src: "/images/limone-bathroom.jpeg",     labelIt: "Bagno Limone",    labelEn: "Limone Bath",    pos: "object-center" },
-  // Oria — indices 10–11
-  { src: "/images/oria.jpeg",                labelIt: "Oria",            labelEn: "Oria",           pos: "object-center" },
-  { src: "/images/oria-bathroom.jpeg",       labelIt: "Bagno Oria",      labelEn: "Oria Bath",      pos: "object-center" },
-  // Francavilla — indices 12–13
-  { src: "/images/francavilla.jpeg",         labelIt: "Francavilla",     labelEn: "Francavilla",    pos: "object-center" },
-  { src: "/images/francavilla-bathroom.jpg", labelIt: "Bagno Francavilla", labelEn: "Francavilla Bath", pos: "object-center" },
-] as const;
+  { src: "/images/fireplace.jpg",       labelIt: "Camino",          labelEn: "Fireplace",      pos: "object-center" },
+  { src: "/images/gate-entrance.jpg",   labelIt: "Ingresso",        labelEn: "Entrance",       pos: "object-center" },
+  { src: "/images/courtyard.jpg",       labelIt: "Cortile",         labelEn: "Courtyard",      pos: "object-center" },
+  { src: "/images/pool.jpg",            labelIt: "Piscina",         labelEn: "Pool",           pos: "object-center" },
+  { src: "/images/outdoor-eating.jpg",  labelIt: "Pranzo in giardino", labelEn: "Garden dining", pos: "object-center" },
+  { src: "/images/dinner-table.jpg",    labelIt: "Cena",            labelEn: "Dinner",         pos: "object-center" },
+  { src: "/images/breakfast-table-1.jpg", labelIt: "Colazione",    labelEn: "Breakfast",      pos: "object-center" },
+  { src: "/images/church.jpg",          labelIt: "Francavilla Fontana", labelEn: "Francavilla Fontana", pos: "object-center" },
+  // Stella & Luna — indices 8–9 (shared bedroom/bathroom)
+  { src: "/images/1-bedroom.jpg",       labelIt: "Stella · Luna",       labelEn: "Star · Moon",        pos: "object-center" },
+  { src: "/images/1-bathroom.jpg",      labelIt: "Bagno · Stella · Luna", labelEn: "Star · Moon — Bath", pos: "object-center" },
+  // Venere & Marte — indices 10–11 (shared bedroom/bathroom)
+  { src: "/images/2-bedroom.jpg",       labelIt: "Venere · Marte",      labelEn: "Venus · Mars",       pos: "object-center" },
+  { src: "/images/2-bathroom.jpg",      labelIt: "Bagno · Venere · Marte", labelEn: "Venus · Mars — Bath", pos: "object-center" },
+];
 
-const TOTAL = SLIDES.length; // 14
+const TOTAL = SLIDES.length; // 12
 
 // First image index in the gallery for each room — used by booking link
 const ROOM_SLIDE_INDEX: Record<Room, number> = {
-  Mirtillo: 6,
-  Limone: 8,
-  Oria: 10,
-  Francavilla: 12,
+  Stella: 8,
+  Luna: 8,
+  Venere: 10,
+  Marte: 10,
 };
 
 // Slide takes 76% of container width; 12% peeks each side
@@ -131,7 +127,7 @@ export function GallerySection() {
 
               return (
                 <div
-                  key={slide.src}
+                  key={i}
                   style={{
                     position: "absolute",
                     top: 0,

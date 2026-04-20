@@ -1,4 +1,4 @@
-export const ROOMS = ["Mirtillo", "Limone", "Oria", "Francavilla"] as const;
+export const ROOMS = ["Stella", "Luna", "Venere", "Marte"] as const;
 export type Room = (typeof ROOMS)[number];
 
 export interface RoomInfo {

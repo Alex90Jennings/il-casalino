@@ -15,10 +15,10 @@ import { eq, and } from "drizzle-orm";
 import type { Room } from "@/types/room";
 
 export const ROOM_ICAL_ENV: Record<Room, string> = {
-  Mirtillo: process.env.ICAL_MIRTILLO_IMPORT_URL ?? "",
-  Limone: process.env.ICAL_LIMONE_IMPORT_URL ?? "",
-  Oria: process.env.ICAL_ORIA_IMPORT_URL ?? "",
-  Francavilla: process.env.ICAL_FRANCAVILLA_IMPORT_URL ?? "",
+  Stella: process.env.ICAL_STELLA_IMPORT_URL ?? "",
+  Luna: process.env.ICAL_LUNA_IMPORT_URL ?? "",
+  Venere: process.env.ICAL_VENERE_IMPORT_URL ?? "",
+  Marte: process.env.ICAL_MARTE_IMPORT_URL ?? "",
 };
 
 /**

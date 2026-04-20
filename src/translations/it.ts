@@ -24,17 +24,17 @@ export const it = {
     from: "Da",
     perNight: "a notte",
     discover: "Scopri",
-    Mirtillo: {
-      description: "Avvolta nei toni del mirtillo selvatico, questa camera accoglie con calore e intimità.",
+    Stella: {
+      description: "Luminosa e serena, Stella accoglie con la sua luce morbida e un'atmosfera di quiete elevata.",
     },
-    Limone: {
-      description: "Luminosa e fresca come il sole pugliese, ispirata al profumo dei limoni del giardino.",
+    Luna: {
+      description: "Avvolta in toni lunari e soffusi, Luna invita al riposo profondo e all'intimità.",
     },
-    Oria: {
-      description: "Elegante e tranquilla, prende il nome dalla storica città messapica nelle vicinanze.",
+    Venere: {
+      description: "Raffinata ed elegante, Venere celebra la bellezza nei dettagli e nel comfort senza eccessi.",
     },
-    Francavilla: {
-      description: "La più spaziosa, dedicata alla città che ci ospita con tutto il suo fascino barocco.",
+    Marte: {
+      description: "La più spaziosa, Marte offre carattere e solidità in uno spazio di charme autentico.",
     },
   },
   services: {
@@ -70,6 +70,8 @@ export const it = {
   booking: {
     heading: "Prenota il Tuo Soggiorno",
     subtitle: "Soggiorno minimo 3 notti",
+    comingSoonHeading: "Prenotazione diretta in arrivo",
+    comingSoonBody: "Stiamo preparando il nostro sistema di prenotazione. Nel frattempo, contattateci direttamente per disponibilità e tariffe.",
     selectRooms: "Seleziona camera/e",
     checkIn: "Arrivo",
     checkOut: "Partenza",

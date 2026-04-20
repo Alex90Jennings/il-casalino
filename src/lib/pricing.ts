@@ -2,10 +2,10 @@ import type { PriceSummary } from "@/types/booking";
 
 // Room base rates (€/night) — update these or move to DB when pricing is finalised
 export const ROOM_RATES: Record<string, number> = {
-  Mirtillo: 90,
-  Limone: 90,
-  Oria: 100,
-  Francavilla: 110,
+  Stella: 90,
+  Luna: 90,
+  Venere: 100,
+  Marte: 110,
 };
 
 export function calculateNights(checkIn: Date, checkOut: Date): number {
