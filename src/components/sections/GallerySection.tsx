@@ -9,30 +9,30 @@ import type { Room } from "@/types/room";
 // Image manifest — property shots first, then per-room pairs
 // ---------------------------------------------------------------------------
 const SLIDES = [
+  { src: "/images/pool.jpg",            labelIt: "Piscina",         labelEn: "Pool",           pos: "object-center" },
   { src: "/images/fireplace.jpg",       labelIt: "Camino",          labelEn: "Fireplace",      pos: "object-center" },
   { src: "/images/gate-entrance.jpg",   labelIt: "Ingresso",        labelEn: "Entrance",       pos: "object-center" },
   { src: "/images/courtyard.jpg",       labelIt: "Cortile",         labelEn: "Courtyard",      pos: "object-center" },
-  { src: "/images/pool.jpg",            labelIt: "Piscina",         labelEn: "Pool",           pos: "object-center" },
   { src: "/images/outdoor-eating.jpg",  labelIt: "Pranzo in giardino", labelEn: "Garden dining", pos: "object-center" },
   { src: "/images/dinner-table.jpg",    labelIt: "Cena",            labelEn: "Dinner",         pos: "object-center" },
   { src: "/images/breakfast-table-1.jpg", labelIt: "Colazione",    labelEn: "Breakfast",      pos: "object-center" },
-  { src: "/images/church.jpg",          labelIt: "Francavilla Fontana", labelEn: "Francavilla Fontana", pos: "object-center" },
-  // Stella & Luna — indices 8–9 (shared bedroom/bathroom)
+  // Stella & Luna — indices 7–8 (shared bedroom/bathroom)
   { src: "/images/1-bedroom.jpg",       labelIt: "Stella · Luna",       labelEn: "Star · Moon",        pos: "object-center" },
   { src: "/images/1-bathroom.jpg",      labelIt: "Bagno · Stella · Luna", labelEn: "Star · Moon — Bath", pos: "object-center" },
-  // Venere & Marte — indices 10–11 (shared bedroom/bathroom)
+  // Venere & Marte — indices 9–10 (shared bedroom/bathroom)
   { src: "/images/2-bedroom.jpg",       labelIt: "Venere · Marte",      labelEn: "Venus · Mars",       pos: "object-center" },
   { src: "/images/2-bathroom.jpg",      labelIt: "Bagno · Venere · Marte", labelEn: "Venus · Mars — Bath", pos: "object-center" },
+  { src: "/images/church.jpg",          labelIt: "Francavilla Fontana", labelEn: "Francavilla Fontana", pos: "object-center" },
 ];
 
 const TOTAL = SLIDES.length; // 12
 
 // First image index in the gallery for each room — used by booking link
 const ROOM_SLIDE_INDEX: Record<Room, number> = {
-  Stella: 8,
-  Luna: 8,
-  Venere: 10,
-  Marte: 10,
+  Stella: 7,
+  Luna: 7,
+  Venere: 9,
+  Marte: 9,
 };
 
 // Slide takes 76% of container width; 12% peeks each side
