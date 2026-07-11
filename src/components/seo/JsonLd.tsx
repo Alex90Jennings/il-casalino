@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://ilcasinocasalino.com";
+import { SITE_URL as BASE_URL } from "@/lib/site";
 
 const lodgingBusiness = {
   "@context": "https://schema.org",

@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { SITE_URL as BASE_URL } from "@/lib/site";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -16,8 +17,6 @@ const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
 });
-
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://ilcasinocasalino.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),

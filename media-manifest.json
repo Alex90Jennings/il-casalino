@@ -7,12 +7,6 @@
     "sourceHeight": 2000,
     "outputs": [
       {
-        "file": "media/images/pool-960.webp",
-        "width": 960,
-        "height": 640,
-        "bytes": 98036
-      },
-      {
         "file": "media/images/pool-1280.webp",
         "width": 1280,
         "height": 853,
@@ -25,10 +19,10 @@
         "bytes": 258968
       },
       {
-        "file": "media/images/pool-1920.webp",
-        "width": 1920,
-        "height": 1280,
-        "bytes": 355470
+        "file": "media/images/pool-2560.webp",
+        "width": 2560,
+        "height": 1707,
+        "bytes": 579254
       }
     ]
   },

@@ -9,7 +9,6 @@
 // `npm run media:optimise` (images) and `npm run media:optimise:videos` (video).
 // Source originals in media-originals/ are never referenced by the site.
 
-export type Locale = "en" | "it";
 export type LocalisedText = { en: string; it: string };
 
 // Group a gallery item belongs to — drives the room selector synchronisation.
@@ -57,9 +56,9 @@ export const ROOM_ORDER: RoomKey[] = ["Sole", "Stella", "Luna", "Venere"];
 // Hero / main image — the optimised pool photo.
 export const HERO_IMAGE: MediaImage = {
   id: "pool",
-  src: "/media/images/pool-1920.webp",
-  width: 1920,
-  height: 1280,
+  src: "/media/images/pool-2560.webp",
+  width: 2560,
+  height: 1707,
   alt: {
     en: "The swimming pool at Il Casino Casalino",
     it: "La piscina di Il Casino Casalino",
@@ -69,7 +68,8 @@ export const HERO_IMAGE: MediaImage = {
 };
 
 // Shared / common areas — the pool leads, then exteriors and interiors.
-export const SHARED_GALLERY: MediaImage[] = [
+// Internal to this module; consumed only when building GALLERY below.
+const SHARED_GALLERY: MediaImage[] = [
   {
     id: "pool",
     src: "/media/images/pool-1280.webp",
@@ -168,8 +168,8 @@ function roomVideo(id: string, en: string, it: string): RoomVideo {
   };
 }
 
-// Breakfast clip — the lead item of the gallery.
-export const BREAKFAST_VIDEO: RoomVideo = {
+// Breakfast clip — the lead item of the gallery (internal; used in GALLERY below).
+const BREAKFAST_VIDEO: RoomVideo = {
   id: "breakfast-video",
   src: "/media/videos/breakfast.mp4",
   poster: "/media/videos/breakfast-poster.webp",
