@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
+import { HERO_IMAGE } from "@/data/media";
 
 export function HeroSection() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
 
   return (
     <section id="hero" className="bg-cream pt-14">
@@ -34,11 +35,12 @@ export function HeroSection() {
       {/* Contained hero image with subtle edge vignette */}
       <div className="relative w-full aspect-[16/7] md:aspect-[21/8] overflow-hidden">
         <Image
-          src="/images/gate-entrance.jpg"
-          alt="Il Casino Casalino — ingresso della proprietà"
+          src={HERO_IMAGE.src}
+          alt={HERO_IMAGE.alt[locale]}
           fill
           className="object-cover object-center"
           priority
+          fetchPriority="high"
           sizes="100vw"
         />
         {/* Subtle radial edge vignette — richens the image without darkening the center */}

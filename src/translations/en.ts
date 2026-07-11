@@ -57,9 +57,9 @@ export const en: Translations = {
       title: "Parking",
       description: "Free private parking within the property.",
     },
-    checkin: {
-      title: "Flexible Check-in",
-      description: "Arrival and departure times arranged to suit your needs.",
+    pool: {
+      title: "Swimming Pool",
+      description: "Outdoor pool set in the garden — a refreshing dip on sunny days.",
     },
     local: {
       title: "Local Tips",
@@ -68,12 +68,22 @@ export const en: Translations = {
   },
   gallery: {
     heading: "Gallery",
+    chooseRoom: "Choose a room",
+    sharedAreas: "Shared areas",
+    roomMedia: "photos and video",
+    viewVideo: "View video",
+    playVideo: "Play video",
+    roomVideo: "Room video",
+    previous: "Previous image",
+    next: "Next image",
   },
   booking: {
     heading: "Book Your Stay",
     subtitle: "Minimum stay 3 nights",
     comingSoonHeading: "Direct booking coming soon",
     comingSoonBody: "We're preparing our direct booking experience. In the meantime, contact us directly for availability and rates.",
+    widgetTitle: "Booking — Il Casino Casalino",
+    openInNewTab: "Trouble with the form? Open booking in a new tab",
     selectRooms: "Select room(s)",
     checkIn: "Check-in",
     checkOut: "Check-out",

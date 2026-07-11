@@ -55,9 +55,9 @@ export const it = {
       title: "Parcheggio",
       description: "Parcheggio privato gratuito all'interno della proprietà.",
     },
-    checkin: {
-      title: "Check-in Flessibile",
-      description: "Orari di arrivo e partenza concordabili in base alle vostre esigenze.",
+    pool: {
+      title: "Piscina",
+      description: "Piscina all'aperto immersa nel giardino, per rinfrescarsi nelle giornate di sole.",
     },
     local: {
       title: "Consigli Locali",
@@ -66,12 +66,22 @@ export const it = {
   },
   gallery: {
     heading: "Galleria",
+    chooseRoom: "Scegli una camera",
+    sharedAreas: "Aree comuni",
+    roomMedia: "foto e video",
+    viewVideo: "Guarda il video",
+    playVideo: "Riproduci video",
+    roomVideo: "Video della camera",
+    previous: "Immagine precedente",
+    next: "Immagine successiva",
   },
   booking: {
     heading: "Prenota il Tuo Soggiorno",
     subtitle: "Soggiorno minimo 3 notti",
     comingSoonHeading: "Prenotazione diretta in arrivo",
     comingSoonBody: "Stiamo preparando il nostro sistema di prenotazione. Nel frattempo, contattateci direttamente per disponibilità e tariffe.",
+    widgetTitle: "Prenotazione — Il Casino Casalino",
+    openInNewTab: "Problemi con il modulo? Apri la prenotazione in una nuova scheda",
     selectRooms: "Seleziona camera/e",
     checkIn: "Arrivo",
     checkOut: "Partenza",
