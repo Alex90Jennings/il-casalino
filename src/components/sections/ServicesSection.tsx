@@ -25,9 +25,10 @@ const SERVICE_ICONS: Record<string, React.ReactNode> = {
       <path strokeLinecap="round" d="M9 17V7h4a3 3 0 010 6H9" />
     </svg>
   ),
-  checkin: (
+  pool: (
     <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth={1} viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M2 15c1.8 0 1.8-1.5 3.6-1.5S7.4 15 9.2 15s1.8-1.5 3.6-1.5S14.6 15 16.4 15s1.8-1.5 3.6-1.5M2 19.5c1.8 0 1.8-1.5 3.6-1.5S7.4 19.5 9.2 19.5s1.8-1.5 3.6-1.5S14.6 19.5 16.4 19.5s1.8-1.5 3.6-1.5" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8 11V5.5a2 2 0 012-2M16 11V5.5a2 2 0 00-2-2M8 7.5h8" />
     </svg>
   ),
   local: (
@@ -38,7 +39,7 @@ const SERVICE_ICONS: Record<string, React.ReactNode> = {
   ),
 };
 
-const SERVICE_KEYS = ["breakfast", "garden", "wifi", "parking", "checkin", "local"] as const;
+const SERVICE_KEYS = ["breakfast", "garden", "wifi", "parking", "pool", "local"] as const;
 
 export function ServicesSection() {
   const { t } = useLanguage();
