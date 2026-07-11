@@ -11,8 +11,10 @@ interface LazyVideoProps {
   playLabel: string;
   /** Only the active carousel slide plays; others stay a poster. */
   active: boolean;
-  /** The gallery is scrolled into view — gates autoplay so nothing loads on initial page load. */
+  /** The gallery is scrolled into view — gates autoplay so room videos don't load on initial page load. */
   inView: boolean;
+  /** Lead video: autoplay from page load (ignores inView) so it's already playing when reached. */
+  eager?: boolean;
   sizes?: string;
 }
 
@@ -35,13 +37,14 @@ function usePrefersReducedMotion(): boolean {
 // while the slide is active, so the MP4 is fetched on focus, never on initial
 // page load, and no more than one video ever plays at once. Reduced-motion users
 // are not autoplayed: they get a poster with a click-to-play button (still muted).
-export function LazyVideo({ src, poster, alt, playLabel, active, inView, sizes }: LazyVideoProps) {
+export function LazyVideo({ src, poster, alt, playLabel, active, inView, eager, sizes }: LazyVideoProps) {
   const reducedMotion = usePrefersReducedMotion();
   const [clicked, setClicked] = useState(false);
 
-  // Autoplay only when this slide is active AND the gallery is on screen, so the
-  // lead video never downloads on initial page load (the gallery is below the fold).
-  const play = active && inView && (!reducedMotion || clicked);
+  // Autoplay when this slide is active. Room videos also require the gallery to be
+  // on screen (so they don't load on initial page load); the eager lead video
+  // starts from page load so it's already playing by the time it's scrolled to.
+  const play = active && (eager || inView) && (!reducedMotion || clicked);
 
   if (play) {
     return (

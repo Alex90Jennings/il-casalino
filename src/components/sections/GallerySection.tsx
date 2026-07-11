@@ -234,6 +234,7 @@ export function GallerySection() {
                         playLabel={`${t.gallery.playVideo} — ${slide.caption[locale]}`}
                         active={isActive}
                         inView={inView}
+                        eager={i === 0}
                         sizes="(max-width: 768px) 85vw, 70vw"
                       />
                     )}

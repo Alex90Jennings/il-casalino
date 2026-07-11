@@ -161,7 +161,7 @@ test("gallery data: one continuous sequence, rooms reachable by first index", ()
   assert.equal(gallery.length, 12, "gallery item count is fixed regardless of navigation");
 });
 
-test("room videos autoplay muted on the active slide, never eagerly, no sound option", () => {
+test("videos autoplay muted; lead is eager, room videos are view-gated, no sound option", () => {
   const raw = read("src/components/ui/LazyVideo.tsx");
   const v = raw.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, ""); // strip comments
   assert.ok(/\bmuted\b/.test(v), "video must be muted");
@@ -169,9 +169,12 @@ test("room videos autoplay muted on the active slide, never eagerly, no sound op
   assert.ok(/\bloop\b/.test(v), "video loops");
   assert.ok(!/\bcontrols\b/.test(v), "no controls → sound can never be enabled");
   assert.ok(/prefers-reduced-motion/.test(v), "reduced motion must be respected");
-  // The <video> only mounts while the slide is active → not fetched on initial load.
-  assert.ok(/const play = active &&/.test(v), "video gated behind the active slide");
+  // Active slide plays; room videos also need the gallery in view, the lead is eager.
+  assert.ok(/const play = active && \(eager \|\| inView\)/.test(v), "eager lead, view-gated rooms");
   assert.ok(v.includes("aria-label={playLabel}"), "reduced-motion play button keeps a localised label");
+  // Only the first gallery slide (breakfast video) is eager.
+  const g = read(`${SECTION_DIR}/GallerySection.tsx`);
+  assert.ok(/eager=\{i === 0\}/.test(g), "only the lead slide is eager");
 });
 
 test("language toggle drives media metadata (both locales present)", () => {
