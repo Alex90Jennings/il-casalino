@@ -78,7 +78,7 @@ test("hero uses the optimised pool asset (not pool-garden) and is the only prior
   const hero = read(`${SECTION_DIR}/HeroSection.tsx`);
   const media = read("src/data/media.ts");
   assert.ok(hero.includes("HERO_IMAGE"), "hero should use HERO_IMAGE metadata");
-  assert.ok(media.includes("/media/images/pool-1920.webp"), "hero should use optimised pool");
+  assert.ok(media.includes("/media/images/pool-2560.webp"), "hero should use optimised pool");
   assert.ok(!media.includes("pool-garden"), "pool-garden must no longer be referenced");
 
   for (const f of sectionFiles) {

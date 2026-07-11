@@ -10,21 +10,11 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test scripts/",
     "media:optimise": "tsx scripts/optimise-media.ts",
-    "media:optimise:videos": "FFMPEG=\"$(node -p 'require(\"ffmpeg-static\")')\" bash scripts/optimise-videos.sh",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "media:optimise:videos": "FFMPEG=\"$(node -p 'require(\"ffmpeg-static\")')\" bash scripts/optimise-videos.sh"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.0.2",
-    "@paypal/react-paypal-js": "^9.0.1",
-    "drizzle-kit": "^0.31.9",
-    "drizzle-orm": "^0.45.1",
-    "ical.js": "^2.2.1",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-day-picker": "^9.14.0",
     "react-dom": "19.2.3"
   },
   "devDependencies": {

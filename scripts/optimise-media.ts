@@ -22,9 +22,12 @@ const MANIFEST = path.resolve("media-manifest.json");
 const WEBP_QUALITY = 78;
 
 // Role-based widths — only sizes that are actually useful for each role.
+// One master width per role — next/image derives the responsive srcset from it,
+// so pre-generating smaller widths would just create unused files.
 const ROLE_WIDTHS = {
-  hero: [960, 1280, 1600, 1920],
-  gallery: [640, 960, 1280],
+  // 1280 (gallery reuse), 1600 (OG image), 2560 (hero master for next/image).
+  hero: [1280, 1600, 2560],
+  gallery: [1280],
 } as const;
 
 type Role = keyof typeof ROLE_WIDTHS;
