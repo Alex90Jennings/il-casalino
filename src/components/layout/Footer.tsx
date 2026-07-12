@@ -14,10 +14,10 @@ export function Footer() {
           {/* Brand */}
           <div>
             <p className="text-white text-sm tracking-[0.15em] uppercase mb-3">
-              {process.env.NEXT_PUBLIC_SITE_NAME ?? "Il Casino Casalino"}
+              Il Casino Casalino
             </p>
             <p className="text-xs leading-relaxed">
-              {process.env.NEXT_PUBLIC_BUSINESS_ADDRESS}
+              Contrada Casalino, 18, 72021, Francavilla Fontana BR, Italy
             </p>
           </div>
 
@@ -26,8 +26,8 @@ export function Footer() {
             <p className="text-white text-xs tracking-widest uppercase mb-3">
               {t.contact.heading}
             </p>
-            <p className="text-xs mb-1">{process.env.NEXT_PUBLIC_BUSINESS_PHONE}</p>
-            <p className="text-xs">{process.env.NEXT_PUBLIC_BUSINESS_EMAIL}</p>
+            <p className="text-xs mb-1">+393277755170</p>
+            <p className="text-xs">ilcasinocasalino@gmail.com</p>
           </div>
 
           {/* Links placeholder */}

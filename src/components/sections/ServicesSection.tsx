@@ -41,6 +41,24 @@ const SERVICE_ICONS: Record<string, React.ReactNode> = {
 
 const SERVICE_KEYS = ["breakfast", "garden", "wifi", "parking", "pool", "local"] as const;
 
+const EXTRA_ICONS: Record<string, React.ReactNode> = {
+  italianLessons: (
+    <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth={1} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 7C10.4 5.9 7.8 5.4 5.5 6v12c2.3-.6 4.9-.1 6.5 1 1.6-1.1 4.2-1.6 6.5-1V6c-2.3-.6-4.9-.1-6.5 1zm0 0v12" />
+    </svg>
+  ),
+  carRental: (
+    <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth={1} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 13l1.6-4.6A2 2 0 016.5 7h11a2 2 0 011.9 1.4L21 13v4.5a1 1 0 01-1 1h-1a1 1 0 01-1-1V17H6v.5a1 1 0 01-1 1H4a1 1 0 01-1-1z" />
+      <path strokeLinecap="round" d="M3.5 13h17" />
+      <circle cx="7.5" cy="15" r=".6" fill="currentColor" stroke="none" />
+      <circle cx="16.5" cy="15" r=".6" fill="currentColor" stroke="none" />
+    </svg>
+  ),
+};
+
+const EXTRA_KEYS = ["italianLessons", "carRental"] as const;
+
 export function ServicesSection() {
   const { t } = useLanguage();
 
@@ -70,6 +88,31 @@ export function ServicesSection() {
               </p>
             </div>
           ))}
+        </div>
+
+        {/* Optional extras — separately arranged, on request */}
+        <div className="mt-16 md:mt-20">
+          <div className="text-center mb-10">
+            <h3 className="text-xs tracking-[0.2em] uppercase text-charcoal font-medium">
+              {t.services.extrasHeading}
+            </h3>
+            <div className="w-6 h-px bg-stone-light mx-auto mt-4" />
+          </div>
+          <div className="grid grid-cols-2 gap-x-8 gap-y-12 max-w-xl mx-auto">
+            {EXTRA_KEYS.map((key) => (
+              <div key={key} className="text-center">
+                <div className="flex justify-center mb-4 text-stone/70">
+                  {EXTRA_ICONS[key]}
+                </div>
+                <h4 className="text-xs tracking-[0.2em] uppercase text-charcoal mb-2 font-medium">
+                  {t.services[key].title}
+                </h4>
+                <p className="text-xs text-charcoal/55 leading-relaxed font-serif italic">
+                  {t.services[key].description}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

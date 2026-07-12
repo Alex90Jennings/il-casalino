@@ -8,8 +8,9 @@ import { scrollToSection } from "@/lib/scroll";
 const NAV_SECTIONS = [
   { key: "home" as const, sectionId: "hero" },
   { key: "about" as const, sectionId: "about" },
-  { key: "services" as const, sectionId: "services" },
   { key: "gallery" as const, sectionId: "gallery" },
+  { key: "services" as const, sectionId: "services" },
+  { key: "rooms" as const, sectionId: "rooms" },
   { key: "booking" as const, sectionId: "booking" },
   { key: "contact" as const, sectionId: "contact" },
 ] as const;

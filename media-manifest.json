@@ -1,7 +1,36 @@
 [
   {
-    "source": "pool.jpg",
+    "source": "legacy/gate-entrance.jpg",
+    "id": "gate-entrance",
     "role": "hero",
+    "sourceBytes": 1765922,
+    "sourceWidth": 3000,
+    "sourceHeight": 2000,
+    "outputs": [
+      {
+        "file": "media/images/gate-entrance-1280.webp",
+        "width": 1280,
+        "height": 853,
+        "bytes": 346516
+      },
+      {
+        "file": "media/images/gate-entrance-1600.webp",
+        "width": 1600,
+        "height": 1067,
+        "bytes": 541464
+      },
+      {
+        "file": "media/images/gate-entrance-2560.webp",
+        "width": 2560,
+        "height": 1707,
+        "bytes": 1281274
+      }
+    ]
+  },
+  {
+    "source": "legacy/pool.jpg",
+    "id": "pool",
+    "role": "gallery",
     "sourceBytes": 963025,
     "sourceWidth": 3000,
     "sourceHeight": 2000,
@@ -11,40 +40,33 @@
         "width": 1280,
         "height": 853,
         "bytes": 171690
-      },
-      {
-        "file": "media/images/pool-1600.webp",
-        "width": 1600,
-        "height": 1067,
-        "bytes": 258968
-      },
-      {
-        "file": "media/images/pool-2560.webp",
-        "width": 2560,
-        "height": 1707,
-        "bytes": 579254
       }
     ]
   },
   {
-    "source": "courtyard.jpg",
+    "source": "legacy/pool-garden.jpg",
+    "id": "pool-garden",
+    "role": "gallery",
+    "sourceBytes": 21376052,
+    "sourceWidth": 8024,
+    "sourceHeight": 5349,
+    "outputs": [
+      {
+        "file": "media/images/pool-garden-1280.webp",
+        "width": 1280,
+        "height": 853,
+        "bytes": 104716
+      }
+    ]
+  },
+  {
+    "source": "legacy/courtyard.jpg",
+    "id": "courtyard",
     "role": "gallery",
     "sourceBytes": 1404159,
     "sourceWidth": 3000,
     "sourceHeight": 2000,
     "outputs": [
-      {
-        "file": "media/images/courtyard-640.webp",
-        "width": 640,
-        "height": 427,
-        "bytes": 79664
-      },
-      {
-        "file": "media/images/courtyard-960.webp",
-        "width": 960,
-        "height": 640,
-        "bytes": 168388
-      },
       {
         "file": "media/images/courtyard-1280.webp",
         "width": 1280,
@@ -54,78 +76,77 @@
     ]
   },
   {
-    "source": "gate-entrance.jpg",
+    "source": "shared/angle.jpg",
+    "id": "angle",
     "role": "gallery",
-    "sourceBytes": 1765922,
-    "sourceWidth": 3000,
-    "sourceHeight": 2000,
+    "sourceBytes": 19384008,
+    "sourceWidth": 5403,
+    "sourceHeight": 8104,
     "outputs": [
       {
-        "file": "media/images/gate-entrance-640.webp",
-        "width": 640,
-        "height": 427,
-        "bytes": 85194
-      },
-      {
-        "file": "media/images/gate-entrance-960.webp",
-        "width": 960,
-        "height": 640,
-        "bytes": 188416
-      },
-      {
-        "file": "media/images/gate-entrance-1280.webp",
+        "file": "media/images/angle-1280.webp",
         "width": 1280,
-        "height": 853,
-        "bytes": 346516
+        "height": 1920,
+        "bytes": 186552
       }
     ]
   },
   {
-    "source": "outdoor-eating.jpg",
+    "source": "shared/bell.jpg",
+    "id": "bell",
     "role": "gallery",
-    "sourceBytes": 848622,
-    "sourceWidth": 3000,
-    "sourceHeight": 2000,
+    "sourceBytes": 22225917,
+    "sourceWidth": 5267,
+    "sourceHeight": 7901,
     "outputs": [
       {
-        "file": "media/images/outdoor-eating-640.webp",
-        "width": 640,
-        "height": 427,
-        "bytes": 37816
-      },
-      {
-        "file": "media/images/outdoor-eating-960.webp",
-        "width": 960,
-        "height": 640,
-        "bytes": 75142
-      },
-      {
-        "file": "media/images/outdoor-eating-1280.webp",
+        "file": "media/images/bell-1280.webp",
         "width": 1280,
-        "height": 853,
-        "bytes": 135820
+        "height": 1920,
+        "bytes": 287122
       }
     ]
   },
   {
-    "source": "fireplace.jpg",
+    "source": "shared/chimney.jpg",
+    "id": "chimney",
+    "role": "gallery",
+    "sourceBytes": 21660139,
+    "sourceWidth": 5426,
+    "sourceHeight": 8139,
+    "outputs": [
+      {
+        "file": "media/images/chimney-1280.webp",
+        "width": 1280,
+        "height": 1920,
+        "bytes": 243766
+      }
+    ]
+  },
+  {
+    "source": "shared/living-room-1.jpg",
+    "id": "living-room",
+    "role": "gallery",
+    "sourceBytes": 26442516,
+    "sourceWidth": 5504,
+    "sourceHeight": 8256,
+    "outputs": [
+      {
+        "file": "media/images/living-room-1280.webp",
+        "width": 1280,
+        "height": 1920,
+        "bytes": 217976
+      }
+    ]
+  },
+  {
+    "source": "legacy/fireplace.jpg",
+    "id": "fireplace",
     "role": "gallery",
     "sourceBytes": 708556,
     "sourceWidth": 3000,
     "sourceHeight": 2000,
     "outputs": [
-      {
-        "file": "media/images/fireplace-640.webp",
-        "width": 640,
-        "height": 427,
-        "bytes": 30186
-      },
-      {
-        "file": "media/images/fireplace-960.webp",
-        "width": 960,
-        "height": 640,
-        "bytes": 61506
-      },
       {
         "file": "media/images/fireplace-1280.webp",
         "width": 1280,
@@ -135,24 +156,13 @@
     ]
   },
   {
-    "source": "billiard.jpg",
+    "source": "legacy/billiard.jpg",
+    "id": "billiard",
     "role": "gallery",
     "sourceBytes": 22541737,
     "sourceWidth": 8256,
     "sourceHeight": 5504,
     "outputs": [
-      {
-        "file": "media/images/billiard-640.webp",
-        "width": 640,
-        "height": 427,
-        "bytes": 28496
-      },
-      {
-        "file": "media/images/billiard-960.webp",
-        "width": 960,
-        "height": 640,
-        "bytes": 55112
-      },
       {
         "file": "media/images/billiard-1280.webp",
         "width": 1280,
@@ -162,29 +172,162 @@
     ]
   },
   {
-    "source": "dinner-table.jpg",
+    "source": "shared/kitchen.jpg",
+    "id": "kitchen",
+    "role": "gallery",
+    "sourceBytes": 23231725,
+    "sourceWidth": 8256,
+    "sourceHeight": 5504,
+    "outputs": [
+      {
+        "file": "media/images/kitchen-1280.webp",
+        "width": 1280,
+        "height": 853,
+        "bytes": 75480
+      }
+    ]
+  },
+  {
+    "source": "shared/coffe-1.jpg",
+    "id": "coffee",
+    "role": "gallery",
+    "sourceBytes": 23987686,
+    "sourceWidth": 5504,
+    "sourceHeight": 8256,
+    "outputs": [
+      {
+        "file": "media/images/coffee-1280.webp",
+        "width": 1280,
+        "height": 1920,
+        "bytes": 123100
+      }
+    ]
+  },
+  {
+    "source": "legacy/dinner-table.jpg",
+    "id": "dinner-table",
     "role": "gallery",
     "sourceBytes": 647300,
     "sourceWidth": 3000,
     "sourceHeight": 2000,
     "outputs": [
       {
-        "file": "media/images/dinner-table-640.webp",
-        "width": 640,
-        "height": 427,
-        "bytes": 33560
-      },
-      {
-        "file": "media/images/dinner-table-960.webp",
-        "width": 960,
-        "height": 640,
-        "bytes": 65008
-      },
-      {
         "file": "media/images/dinner-table-1280.webp",
         "width": 1280,
         "height": 853,
         "bytes": 109312
+      }
+    ]
+  },
+  {
+    "source": "legacy/outdoor-eating.jpg",
+    "id": "outdoor-eating",
+    "role": "gallery",
+    "sourceBytes": 848622,
+    "sourceWidth": 3000,
+    "sourceHeight": 2000,
+    "outputs": [
+      {
+        "file": "media/images/outdoor-eating-1280.webp",
+        "width": 1280,
+        "height": 853,
+        "bytes": 135820
+      }
+    ]
+  },
+  {
+    "source": "shared/orto.jpg",
+    "id": "orto",
+    "role": "gallery",
+    "sourceBytes": 22599166,
+    "sourceWidth": 5504,
+    "sourceHeight": 8256,
+    "outputs": [
+      {
+        "file": "media/images/orto-1280.webp",
+        "width": 1280,
+        "height": 1920,
+        "bytes": 288496
+      }
+    ]
+  },
+  {
+    "source": "shared/orto-1.jpg",
+    "id": "orto-1",
+    "role": "gallery",
+    "sourceBytes": 22366017,
+    "sourceWidth": 8256,
+    "sourceHeight": 5504,
+    "outputs": [
+      {
+        "file": "media/images/orto-1-1280.webp",
+        "width": 1280,
+        "height": 853,
+        "bytes": 162996
+      }
+    ]
+  },
+  {
+    "source": "shared/trees.jpg",
+    "id": "trees",
+    "role": "gallery",
+    "sourceBytes": 27961657,
+    "sourceWidth": 5504,
+    "sourceHeight": 8256,
+    "outputs": [
+      {
+        "file": "media/images/trees-1280.webp",
+        "width": 1280,
+        "height": 1920,
+        "bytes": 394664
+      }
+    ]
+  },
+  {
+    "source": "shared/flower-2.jpg",
+    "id": "flower",
+    "role": "gallery",
+    "sourceBytes": 20444171,
+    "sourceWidth": 5504,
+    "sourceHeight": 8256,
+    "outputs": [
+      {
+        "file": "media/images/flower-1280.webp",
+        "width": 1280,
+        "height": 1920,
+        "bytes": 110538
+      }
+    ]
+  },
+  {
+    "source": "shared/cactus.jpg",
+    "id": "cactus",
+    "role": "gallery",
+    "sourceBytes": 33454253,
+    "sourceWidth": 8256,
+    "sourceHeight": 5504,
+    "outputs": [
+      {
+        "file": "media/images/cactus-1280.webp",
+        "width": 1280,
+        "height": 853,
+        "bytes": 239110
+      }
+    ]
+  },
+  {
+    "source": "shared/francavilla_fontana-casale_casalino@@010022.jpg",
+    "id": "francavilla",
+    "role": "gallery",
+    "sourceBytes": 511827,
+    "sourceWidth": 3000,
+    "sourceHeight": 2000,
+    "outputs": [
+      {
+        "file": "media/images/francavilla-1280.webp",
+        "width": 1280,
+        "height": 853,
+        "bytes": 74626
       }
     ]
   }

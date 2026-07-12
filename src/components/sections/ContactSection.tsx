@@ -23,10 +23,10 @@ export function ContactSection() {
               {t.contact.email}
             </p>
             <a
-              href={`mailto:${process.env.NEXT_PUBLIC_BUSINESS_EMAIL}`}
+              href="mailto:ilcasinocasalino@gmail.com"
               className="text-xs text-charcoal/75 hover:text-charcoal transition-colors"
             >
-              {process.env.NEXT_PUBLIC_BUSINESS_EMAIL}
+              ilcasinocasalino@gmail.com
             </a>
           </div>
           <div>
@@ -34,7 +34,7 @@ export function ContactSection() {
               {t.contact.address}
             </p>
             <p className="text-xs text-charcoal/75 leading-relaxed max-w-[200px] mx-auto">
-              {process.env.NEXT_PUBLIC_BUSINESS_ADDRESS}
+              Contrada Casalino, 18, 72021, Francavilla Fontana BR, Italy
             </p>
           </div>
           <div>
@@ -42,10 +42,10 @@ export function ContactSection() {
               {t.contact.phone}
             </p>
             <a
-              href={`tel:${process.env.NEXT_PUBLIC_BUSINESS_PHONE}`}
+              href="tel:+393277755170"
               className="text-xs text-charcoal/75 hover:text-charcoal transition-colors"
             >
-              {process.env.NEXT_PUBLIC_BUSINESS_PHONE}
+              +393277755170
             </a>
           </div>
         </div>

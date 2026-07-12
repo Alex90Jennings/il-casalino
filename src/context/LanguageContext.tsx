@@ -24,9 +24,7 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 const translations: Record<Locale, Translations> = { it, en };
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const defaultLocale =
-    (process.env.NEXT_PUBLIC_DEFAULT_LOCALE as Locale) ?? "it";
-  const [locale, setLocale] = useState<Locale>(defaultLocale);
+  const [locale, setLocale] = useState<Locale>("it");
 
   const toggle = useCallback(() => {
     setLocale((l) => (l === "it" ? "en" : "it"));

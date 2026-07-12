@@ -3,18 +3,27 @@ import type { Translations } from "./it";
 export const en: Translations = {
   nav: {
     home: "Home",
-    about: "About Us",
-    services: "Services",
+    about: "Your host",
     gallery: "Gallery",
+    services: "Services",
+    rooms: "Rooms",
     booking: "Book",
     contact: "Contact",
   },
-  hero: {
-    tagline: "Bed & Breakfast",
+  host: {
+    heading: "Your host",
+    intro: "Hi, I'm Simona, your host.",
+    body: [
+      "I'm an Italian teacher and content creator, born and raised in Francavilla Fontana. I know this land deeply — its traditions and its local customs. I organise language and cultural study holidays in Puglia and other parts of Italy.",
+      "I love telling the story of Italy through my content and helping visitors experience the country in an authentic, accessible way, offering advice, cultural insights and a warm welcome.",
+      "Il Casino Casalino isn't only where I welcome my guests: it's also my home, where I live all year round. That's why I want to offer genuine, personal and family hospitality, making every visitor feel part of the life of the place. Set in the quiet of the Puglian countryside, Il Casino Casalino is the ideal starting point for discovering the true soul of Puglia — its traditions and its most special corners.",
+    ],
   },
-  about: {
-    heading: "About Us",
-    body: "Welcome to Casino Casalino, an oasis of peace and authenticity nestled in the Puglian countryside. Our historic residence offers a unique experience just minutes from Francavilla Fontana, where local tradition meets modern comfort.",
+  gallery: {
+    heading: "Gallery",
+    previous: "Previous image",
+    next: "Next image",
+    playVideo: "Play video",
   },
   services: {
     heading: "Our Services",
@@ -36,20 +45,24 @@ export const en: Translations = {
     },
     pool: {
       title: "Swimming Pool",
-      description: "Outdoor pool set in the garden — a refreshing dip on sunny days.",
+      description: "Outdoor pool set in the garden.",
     },
     local: {
       title: "Local Tips",
       description: "We guide you to discover the flavours, places and traditions of Puglia.",
     },
+    extrasHeading: "Optional extras",
+    italianLessons: {
+      title: "Italian lessons",
+      description: "Personalised Italian lessons with your host, an Italian teacher, available on request.",
+    },
+    carRental: {
+      title: "Car rental",
+      description: "Help arranging car rental on request.",
+    },
   },
-  gallery: {
-    heading: "Gallery",
-    chooseRoom: "Choose a room",
-    roomMedia: "photos and video",
-    playVideo: "Play video",
-    previous: "Previous image",
-    next: "Next image",
+  rooms: {
+    heading: "The Rooms",
   },
   booking: {
     heading: "Book Your Stay",

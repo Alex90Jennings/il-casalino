@@ -62,10 +62,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/media/images/pool-1600.webp",
+        url: "/media/images/gate-entrance-1600.webp",
         width: 1600,
         height: 1067,
-        alt: "La piscina e il giardino di Il Casino Casalino, Francavilla Fontana, Puglia",
+        alt: "Il portale d'ingresso di Il Casino Casalino, Francavilla Fontana, Puglia",
       },
     ],
   },
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     title: "Il Casino Casalino — Bed & Breakfast, Francavilla Fontana",
     description:
       "Un rifugio autentico nel cuore della Puglia. B&B a Francavilla Fontana, Brindisi.",
-    images: ["/media/images/pool-1600.webp"],
+    images: ["/media/images/gate-entrance-1600.webp"],
   },
   robots: {
     index: true,

@@ -37,7 +37,7 @@ const DESKTOP_LINKS = [
   {
     id: "email",
     label: "Email",
-    href: `mailto:${process.env.NEXT_PUBLIC_BUSINESS_EMAIL ?? "ilcasinocasalino@gmail.com"}`,
+    href: "mailto:ilcasinocasalino@gmail.com",
     hoverClass: "hover:text-[#1A73E8]",
     icon: (
       <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.2} viewBox="0 0 24 24">
@@ -106,7 +106,7 @@ const MOBILE_LINKS = [
   {
     id: "email",
     label: "Email",
-    href: `mailto:${process.env.NEXT_PUBLIC_BUSINESS_EMAIL ?? "ilcasinocasalino@gmail.com"}`,
+    href: "mailto:ilcasinocasalino@gmail.com",
     hoverClass: "hover:text-[#1A73E8]",
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.2} viewBox="0 0 24 24">

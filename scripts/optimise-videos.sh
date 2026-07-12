@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 #
-# Video optimisation pipeline for Il Casino Casalino.
+# Video optimisation for Il Casino Casalino.
 #
-#   media-originals/videos/*.mp4  ->  public/media/videos/*.mp4 (+ WebP posters)
+#   media-originals/room-videos/*.mp4   ->  public/media/videos/*.mp4 (+ posters)
+#   media-originals/shared-area/*.mp4    ->  public/media/videos/*.mp4 (+ posters)
 #
-# The source clips are 4K HEVC (H.265) with AAC stereo audio — not reliably
-# playable in browsers and far too large to host directly. This script transcodes
-# them to web-ready H.264, generates a poster frame, and strips audio from the
-# decorative clips. Safe to re-run.
+# Room clips feed the rooms gallery (user-controlled). Shared-area clips feed the
+# first gallery reel (muted autoplay). Both are transcoded to a consistent
+# web-ready H.264 MP4 (1280px cap, NO audio — every clip plays silent) plus a
+# WebP poster, so playback is smooth and inline on iOS/Android/desktop.
 #
-# FFmpeg: uses $FFMPEG if set, else the system `ffmpeg`. The npm script wires in
-# the bundled ffmpeg-static binary so no system install is required.
-#
-# Run with:  npm run media:optimise:videos
+# FFmpeg: uses $FFMPEG if set, else system `ffmpeg`. The npm script wires in the
+# bundled ffmpeg-static binary. Deterministic settings; safe to re-run.
 set -euo pipefail
 
-SRC="media-originals/videos"
+ROOMS_SRC="media-originals/room-videos"
+SHARED_SRC="media-originals/shared-area"
 OUT="public/media/videos"
 FFMPEG="${FFMPEG:-ffmpeg}"
 
@@ -26,42 +26,33 @@ fi
 
 mkdir -p "$OUT"
 
-# Encode a room video: NO audio (the site always plays these muted), 1080p cap,
-# faststart for progressive play. Dropping the audio track trims the file size.
-encode_room() {
-  local name="$1"
-  echo "→ room video: $name"
-  "$FFMPEG" -y -i "$SRC/$name.mp4" \
-    -vf "scale='min(1920,iw)':-2:flags=lanczos" \
-    -c:v libx264 -profile:v high -pix_fmt yuv420p -crf 26 -preset slow \
-    -movflags +faststart -an \
-    "$OUT/$name.mp4"
-  # Poster from a representative frame (~1s in), as WebP.
-  "$FFMPEG" -y -ss 00:00:01 -i "$SRC/$name.mp4" -frames:v 1 \
-    -vf "scale='min(1280,iw)':-2" "$OUT/$name-poster.webp"
-}
-
-# Encode a decorative background clip: NO audio, 720p cap, higher CRF (smaller).
-encode_decorative() {
-  local name="$1"
-  echo "→ decorative video: $name"
-  "$FFMPEG" -y -i "$SRC/$name.mp4" \
+# encode_file <source.mp4> <output-basename>
+encode_file() {
+  local src="$1" out="$2"
+  echo "→ $out"
+  "$FFMPEG" -y -loglevel error -i "$src" \
     -vf "scale='min(1280,iw)':-2:flags=lanczos" \
-    -c:v libx264 -profile:v high -pix_fmt yuv420p -crf 28 -preset slow \
+    -c:v libx264 -profile:v high -pix_fmt yuv420p -crf 26 -preset medium \
     -movflags +faststart -an \
-    "$OUT/$name.mp4"
-  "$FFMPEG" -y -ss 00:00:01 -i "$SRC/$name.mp4" -frames:v 1 \
-    -vf "scale='min(1280,iw)':-2" "$OUT/$name-poster.webp"
+    "$OUT/$out.mp4"
+  "$FFMPEG" -y -loglevel error -ss 00:00:01 -i "$src" -frames:v 1 \
+    -vf "scale='min(1280,iw)':-2" "$OUT/$out-poster.webp"
 }
 
-# Muted web clips (no audio, 1080p) — autoplayed in the gallery.
-# breakfast leads the gallery; the four rooms follow.
-for r in breakfast luna sole stella venere; do
-  [ -f "$SRC/$r.mp4" ] && encode_room "$r"
+# Room clips (4 rooms × 3) — output name = source name.
+for f in "$ROOMS_SRC"/*.mp4; do
+  encode_file "$f" "$(basename "$f" .mp4)"
 done
 
-# Bathroom clips are excluded by default (redundant detail shots). Uncomment to add:
-# for b in bathroom bathroom-2 bathroom-3 bathroom-4; do encode_decorative "$b"; done
+# Shared-area clips for the first gallery reel. Explicit src → id mapping keeps
+# clean names and avoids clashing with the shared image ids (courtyard/living-room).
+encode_file "$SHARED_SRC/courtyard.mp4"                 "courtyard-video"
+encode_file "$SHARED_SRC/living-room.mp4"               "living-room-video"
+encode_file "$SHARED_SRC/billiards.mp4"                 "billiards"
+encode_file "$SHARED_SRC/orange.mp4"                    "orange"
+encode_file "$SHARED_SRC/breakfast.mp4"                 "breakfast"
+encode_file "$SHARED_SRC/VID_20260629_165245_246.mp4"  "clip-1"
+encode_file "$SHARED_SRC/VID_20260629_173125_291.mp4"  "clip-2"
 
-echo "Done. Review output sizes with: du -h $OUT/*"
-echo "Flag any clip that remains over ~6MB for further editing or external streaming."
+echo "Done. Outputs in $OUT:"
+du -h "$OUT"/*.mp4 | sort

@@ -1,11 +1,11 @@
 /**
  * Image optimisation pipeline for Il Casino Casalino.
  *
- *   media-originals/images/*.jpg  ->  public/media/images/<name>-<width>.webp
+ *   media-originals/{shared-area,images}/<src>  ->  public/media/images/<id>-<width>.webp
  *
  * Deterministic, safe to run repeatedly, never enlarges, strips metadata and
  * corrects EXIF orientation. Only the curated files listed in IMAGE_CONFIG are
- * processed; anything else in the source folder is skipped with a notice.
+ * processed; anything else in the source folders is left untouched.
  *
  * Run with:  npm run media:optimise
  */
@@ -15,15 +15,22 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import sharp, { type Metadata } from "sharp";
 
-const SRC_DIR = path.resolve("media-originals/images");
+// Source folders (gitignored, never served). `shared-area` holds the new
+// professional photos; `images` holds the earlier originals still in use.
+const SOURCE_DIRS = {
+  shared: path.resolve("media-originals/shared-area"),
+  legacy: path.resolve("media-originals/images"),
+} as const;
+type SourceKey = keyof typeof SOURCE_DIRS;
+
 const OUT_DIR = path.resolve("public/media/images");
 const MANIFEST = path.resolve("media-manifest.json");
 
 const WEBP_QUALITY = 78;
 
 // Role-based widths — only sizes that are actually useful for each role.
-// One master width per role — next/image derives the responsive srcset from it,
-// so pre-generating smaller widths would just create unused files.
+// next/image derives the responsive srcset from the master, so pre-generating
+// smaller widths would just create unused files.
 const ROLE_WIDTHS = {
   // 1280 (gallery reuse), 1600 (OG image), 2560 (hero master for next/image).
   hero: [1280, 1600, 2560],
@@ -32,16 +39,31 @@ const ROLE_WIDTHS = {
 
 type Role = keyof typeof ROLE_WIDTHS;
 
-// Curated set only. Files not listed here are intentionally excluded from the
-// site and are left untouched in media-originals.
-const IMAGE_CONFIG: { file: string; role: Role }[] = [
-  { file: "pool.jpg", role: "hero" },
-  { file: "courtyard.jpg", role: "gallery" },
-  { file: "gate-entrance.jpg", role: "gallery" },
-  { file: "outdoor-eating.jpg", role: "gallery" },
-  { file: "fireplace.jpg", role: "gallery" },
-  { file: "billiard.jpg", role: "gallery" },
-  { file: "dinner-table.jpg", role: "gallery" },
+// Curated set only, in a deliberate order. `id` is the output basename so
+// components never depend on the (sometimes messy) source filenames.
+const IMAGE_CONFIG: { file: string; from: SourceKey; id: string; role: Role }[] = [
+  // Hero — the arched stone entrance gate.
+  { file: "gate-entrance.jpg", from: "legacy", id: "gate-entrance", role: "hero" },
+  // Shared-area gallery reel (deliberate order: exteriors → interiors → dining → garden → setting).
+  { file: "pool.jpg", from: "legacy", id: "pool", role: "gallery" },
+  { file: "pool-garden.jpg", from: "legacy", id: "pool-garden", role: "gallery" },
+  { file: "courtyard.jpg", from: "legacy", id: "courtyard", role: "gallery" },
+  { file: "angle.jpg", from: "shared", id: "angle", role: "gallery" },
+  { file: "bell.jpg", from: "shared", id: "bell", role: "gallery" },
+  { file: "chimney.jpg", from: "shared", id: "chimney", role: "gallery" },
+  { file: "living-room-1.jpg", from: "shared", id: "living-room", role: "gallery" },
+  { file: "fireplace.jpg", from: "legacy", id: "fireplace", role: "gallery" },
+  { file: "billiard.jpg", from: "legacy", id: "billiard", role: "gallery" },
+  { file: "kitchen.jpg", from: "shared", id: "kitchen", role: "gallery" },
+  { file: "coffe-1.jpg", from: "shared", id: "coffee", role: "gallery" },
+  { file: "dinner-table.jpg", from: "legacy", id: "dinner-table", role: "gallery" },
+  { file: "outdoor-eating.jpg", from: "legacy", id: "outdoor-eating", role: "gallery" },
+  { file: "orto.jpg", from: "shared", id: "orto", role: "gallery" },
+  { file: "orto-1.jpg", from: "shared", id: "orto-1", role: "gallery" },
+  { file: "trees.jpg", from: "shared", id: "trees", role: "gallery" },
+  { file: "flower-2.jpg", from: "shared", id: "flower", role: "gallery" },
+  { file: "cactus.jpg", from: "shared", id: "cactus", role: "gallery" },
+  { file: "francavilla_fontana-casale_casalino@@010022.jpg", from: "shared", id: "francavilla", role: "gallery" },
 ];
 
 function fmtBytes(n: number): string {
@@ -58,6 +80,7 @@ interface OutputRecord {
 }
 interface ManifestEntry {
   source: string;
+  id: string;
   role: Role;
   sourceBytes: number;
   sourceWidth: number;
@@ -66,20 +89,16 @@ interface ManifestEntry {
 }
 
 async function main() {
-  if (!existsSync(SRC_DIR)) {
-    console.error(`✗ Source directory not found: ${SRC_DIR}`);
-    process.exit(1);
-  }
   await mkdir(OUT_DIR, { recursive: true });
 
   const manifest: ManifestEntry[] = [];
   let totalSrc = 0;
   let totalOut = 0;
 
-  for (const { file, role } of IMAGE_CONFIG) {
-    const srcPath = path.join(SRC_DIR, file);
+  for (const { file, from, id, role } of IMAGE_CONFIG) {
+    const srcPath = path.join(SOURCE_DIRS[from], file);
     if (!existsSync(srcPath)) {
-      console.error(`✗ Missing source, skipping: ${file}`);
+      console.error(`✗ Missing source, skipping: ${from}/${file}`);
       continue;
     }
 
@@ -89,7 +108,7 @@ async function main() {
     try {
       meta = await sharp(srcBuf, { failOn: "error" }).metadata();
     } catch {
-      console.error(`✗ Unreadable image, skipping: ${file}`);
+      console.error(`✗ Unreadable image, skipping: ${from}/${file}`);
       continue;
     }
     // EXIF orientation can swap reported width/height; normalise to displayed.
@@ -97,16 +116,15 @@ async function main() {
     const srcW = (oriented ? meta.height : meta.width) ?? 0;
     const srcH = (oriented ? meta.width : meta.height) ?? 0;
 
-    const base = path.basename(file, path.extname(file));
     const outputs: OutputRecord[] = [];
 
-    console.log(`\n${file}  (${srcW}×${srcH}, ${fmtBytes(srcBytes)}, role=${role})`);
+    console.log(`\n${id}  (${file}, ${srcW}×${srcH}, ${fmtBytes(srcBytes)}, role=${role})`);
     for (const width of ROLE_WIDTHS[role]) {
       if (width > srcW) {
         console.log(`  · ${width}w skipped (would enlarge)`);
         continue;
       }
-      const outName = `${base}-${width}.webp`;
+      const outName = `${id}-${width}.webp`;
       const outPath = path.join(OUT_DIR, outName);
       const info = await sharp(srcBuf, { failOn: "error" })
         .rotate() // apply EXIF orientation, then metadata is stripped by default
@@ -121,7 +139,7 @@ async function main() {
     }
 
     totalSrc += srcBytes;
-    manifest.push({ source: file, role, sourceBytes: srcBytes, sourceWidth: srcW, sourceHeight: srcH, outputs });
+    manifest.push({ source: `${from}/${file}`, id, role, sourceBytes: srcBytes, sourceWidth: srcW, sourceHeight: srcH, outputs });
   }
 
   await writeFile(MANIFEST, JSON.stringify(manifest, null, 2) + "\n");

@@ -11,9 +11,9 @@ const lodgingBusiness = {
   keywords:
     "bed and breakfast Francavilla Fontana, B&B Puglia, soggiorno tradizionale Puglia, turismo Puglia, vacanze in Puglia, Salento, Valle d'Itria",
   hasMap: "https://maps.google.com/?q=Il+Casino+Casalino+Francavilla+Fontana+Brindisi",
-  telephone: process.env.NEXT_PUBLIC_BUSINESS_PHONE ?? "",
-  email: process.env.NEXT_PUBLIC_BUSINESS_EMAIL ?? "ilcasinocasalino@gmail.com",
-  image: `${BASE_URL}/media/images/pool-1600.webp`,
+  telephone: "+393277755170",
+  email: "ilcasinocasalino@gmail.com",
+  image: `${BASE_URL}/media/images/gate-entrance-1600.webp`,
   logo: `${BASE_URL}/logo.png`,
   address: {
     "@type": "PostalAddress",
