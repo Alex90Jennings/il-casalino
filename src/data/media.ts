@@ -69,6 +69,20 @@ export const HERO_IMAGE: MediaImage = {
   caption: { en: "Entrance", it: "Ingresso" },
 };
 
+// Host portrait — Simona. Shown as a small circular profile photo in the About
+// section; the 800w variant is the master (400/800 for 1x/2x).
+export const HOST_IMAGE: MediaImage = {
+  id: "host",
+  src: "/media/images/host-800.webp",
+  width: 800,
+  height: 1200,
+  alt: {
+    en: "Simona, your host at Il Casino Casalino",
+    it: "Simona, la tua host a Il Casino Casalino",
+  },
+  caption: { en: "Simona", it: "Simona" },
+};
+
 function img(
   id: string,
   shape: typeof LANDSCAPE | typeof PORTRAIT,

@@ -35,6 +35,8 @@ const ROLE_WIDTHS = {
   // 1280 (gallery reuse), 1600 (OG image), 2560 (hero master for next/image).
   hero: [1280, 1600, 2560],
   gallery: [1280],
+  // Small portrait avatar (1x/2x) — the host profile photo, shown in a circle.
+  profile: [400, 800],
 } as const;
 
 type Role = keyof typeof ROLE_WIDTHS;
@@ -63,6 +65,8 @@ const IMAGE_CONFIG: { file: string; from: SourceKey; id: string; role: Role }[] 
   { file: "flower-2.jpg", from: "shared", id: "flower", role: "gallery" },
   { file: "cactus.jpg", from: "shared", id: "cactus", role: "gallery" },
   { file: "francavilla_fontana-casale_casalino@@010022.jpg", from: "shared", id: "francavilla", role: "gallery" },
+  // Host portrait — Simona, shown as a circular profile photo in the About section.
+  { file: "host.jpg", from: "legacy", id: "host", role: "profile" },
 ];
 
 function fmtBytes(n: number): string {
