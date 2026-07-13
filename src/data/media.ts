@@ -39,10 +39,15 @@ export type SharedItem =
 
 export type RoomKey = "Sole" | "Stella" | "Venere" | "Luna";
 export type RoomIcon = "sun" | "star" | "shell" | "moon";
+/** Language-independent internal key for a room. Never a translated label. Used
+ *  for DOM targets, selector lookups and the active-room scroll sync. */
+export type RoomSlug = "sun" | "star" | "venus" | "moon";
 
 export interface RoomMedia {
   key: RoomKey;
   icon: RoomIcon;
+  /** Stable, locale-independent identity used by the selector/nav (see RoomSlug). */
+  slug: RoomSlug;
   /** Room name — Italian celestial name, English translation (Sun/Star/Venus/Moon). */
   name: LocalisedText;
   /** Exactly three clips for the room, grouped and ordered. */
@@ -151,14 +156,23 @@ export const SHARED_GALLERY: SharedItem[] = [
   ...SHARED_IMAGES.map((i) => ({ kind: "image" as const, ...i })),
 ];
 
-function roomVideo(id: string, captionEn: string, captionIt: string, name: string): VideoItem {
+// Room display names — the single source shared by the video captions and the
+// selector icon labels, so both read "Star"/"Stella" in the active locale.
+const ROOM_NAMES: Record<RoomKey, LocalisedText> = {
+  Sole: { en: "Sun", it: "Sole" },
+  Stella: { en: "Star", it: "Stella" },
+  Venere: { en: "Venus", it: "Venere" },
+  Luna: { en: "Moon", it: "Luna" },
+};
+
+function roomVideo(id: string, captionEn: string, captionIt: string, name: LocalisedText): VideoItem {
   return {
     id,
     src: `/media/videos/${id}.mp4`,
     poster: `/media/videos/${id}-poster.webp`,
     ...VIDEO,
-    caption: { en: `${name} — ${captionEn}`, it: `${name} — ${captionIt}` },
-    alt: { en: `${name} — ${captionEn}`, it: `${name} — ${captionIt}` },
+    caption: { en: `${name.en} — ${captionEn}`, it: `${name.it} — ${captionIt}` },
+    alt: { en: `${name.en} — ${captionEn}`, it: `${name.it} — ${captionIt}` },
   };
 }
 
@@ -169,41 +183,45 @@ export const ROOMS: Record<RoomKey, RoomMedia> = {
   Sole: {
     key: "Sole",
     icon: "sun",
-    name: { en: "Sun", it: "Sole" },
+    slug: "sun",
+    name: ROOM_NAMES.Sole,
     videos: [
-      roomVideo("sole", "The room", "La camera", "Sole"),
-      roomVideo("sole-bath", "The bathroom", "Il bagno", "Sole"),
-      roomVideo("sole-pillow", "Details", "Dettagli", "Sole"),
+      roomVideo("sole", "The room", "La camera", ROOM_NAMES.Sole),
+      roomVideo("sole-bath", "The bathroom", "Il bagno", ROOM_NAMES.Sole),
+      roomVideo("sole-pillow", "Details", "Dettagli", ROOM_NAMES.Sole),
     ],
   },
   Stella: {
     key: "Stella",
     icon: "star",
-    name: { en: "Star", it: "Stella" },
+    slug: "star",
+    name: ROOM_NAMES.Stella,
     videos: [
-      roomVideo("stella", "The room", "La camera", "Stella"),
-      roomVideo("stella-bath", "The bathroom", "Il bagno", "Stella"),
-      roomVideo("stella-pillow", "Details", "Dettagli", "Stella"),
+      roomVideo("stella", "The room", "La camera", ROOM_NAMES.Stella),
+      roomVideo("stella-bath", "The bathroom", "Il bagno", ROOM_NAMES.Stella),
+      roomVideo("stella-pillow", "Details", "Dettagli", ROOM_NAMES.Stella),
     ],
   },
   Venere: {
     key: "Venere",
     icon: "shell",
-    name: { en: "Venus", it: "Venere" },
+    slug: "venus",
+    name: ROOM_NAMES.Venere,
     videos: [
-      roomVideo("venere-bed", "The room", "La camera", "Venere"),
-      roomVideo("venere-bath", "The bathroom", "Il bagno", "Venere"),
-      roomVideo("venere-pillow", "Details", "Dettagli", "Venere"),
+      roomVideo("venere-bed", "The room", "La camera", ROOM_NAMES.Venere),
+      roomVideo("venere-bath", "The bathroom", "Il bagno", ROOM_NAMES.Venere),
+      roomVideo("venere-pillow", "Details", "Dettagli", ROOM_NAMES.Venere),
     ],
   },
   Luna: {
     key: "Luna",
     icon: "moon",
-    name: { en: "Moon", it: "Luna" },
+    slug: "moon",
+    name: ROOM_NAMES.Luna,
     videos: [
-      roomVideo("luna", "The room", "La camera", "Luna"),
-      roomVideo("luna-bath", "The bathroom", "Il bagno", "Luna"),
-      roomVideo("luna-pillow", "Details", "Dettagli", "Luna"),
+      roomVideo("luna", "The room", "La camera", ROOM_NAMES.Luna),
+      roomVideo("luna-bath", "The bathroom", "Il bagno", ROOM_NAMES.Luna),
+      roomVideo("luna-pillow", "Details", "Dettagli", ROOM_NAMES.Luna),
     ],
   },
 };

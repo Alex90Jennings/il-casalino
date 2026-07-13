@@ -70,6 +70,7 @@ export const it = {
   },
   rooms: {
     heading: "Le Camere",
+    viewRoom: "Vai alla camera {{room}}",
   },
   booking: {
     heading: "Prenota il Tuo Soggiorno",

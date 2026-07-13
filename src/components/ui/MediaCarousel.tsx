@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import { LazyVideo } from "@/components/ui/LazyVideo";
+import { usePrefersReducedMotion } from "@/lib/reduced-motion";
 import type { SharedItem } from "@/data/media";
 
 // Slide takes 76% of container width; ~12% peeks each side.
@@ -30,6 +31,7 @@ interface MediaCarouselProps {
 // and pointer-accessible. Used by both the shared reel and the rooms reel.
 export function MediaCarousel({ items, renderAbove }: MediaCarouselProps) {
   const { t, locale } = useLanguage();
+  const reducedMotion = usePrefersReducedMotion();
   const total = items.length;
   const [current, setCurrent] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -72,11 +74,19 @@ export function MediaCarousel({ items, renderAbove }: MediaCarouselProps) {
   // so clips aren't fetched mid-scroll; only the destination clip plays.
   const animating = animTarget !== null && current !== animTarget;
 
-  const goTo = useCallback((target: number) => setAnimTarget(target), []);
   const jumpTo = useCallback((i: number) => {
     setAnimTarget(null);
     setCurrent(i);
   }, []);
+  // Reduced-motion users get an instant cut to the target clip rather than the
+  // one-slide-at-a-time scroll animation.
+  const goTo = useCallback(
+    (target: number) => {
+      if (reducedMotion) jumpTo(target);
+      else setAnimTarget(target);
+    },
+    [reducedMotion, jumpTo],
+  );
   const prev = useCallback(() => {
     setAnimTarget(null);
     setCurrent((i) => (i - 1 + total) % total);

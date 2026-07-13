@@ -72,6 +72,7 @@ export const en: Translations = {
   },
   rooms: {
     heading: "The Rooms",
+    viewRoom: "Go to the {{room}} room",
   },
   booking: {
     heading: "Book Your Stay",
