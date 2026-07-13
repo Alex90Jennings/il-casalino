@@ -49,9 +49,11 @@ test("contact links use the exact machine-readable email and phone", () => {
   assert.ok(sidebar.includes(`"mailto:${EMAIL}"`) && !sidebar.includes("process.env"));
 });
 
-test("footer renders literal name, address, phone and email (no env)", () => {
+test("footer is a slim copyright bar (localised rights, no contact info, no env)", () => {
   const f = read("src/components/layout/Footer.tsx");
-  for (const v of [NAME, ADDRESS, PHONE, EMAIL]) assert.ok(f.includes(v), `footer missing ${v}`);
+  assert.ok(f.includes("t.footer.rights"), "footer renders the localised rights line");
+  // Contact details now live only in the Contact section / sidebar, not the footer.
+  for (const v of [ADDRESS, PHONE, EMAIL]) assert.ok(!f.includes(v), `footer should no longer include ${v}`);
   assert.ok(!f.includes("process.env"), "no env in footer");
 });
 
