@@ -62,7 +62,7 @@ function Sign() {
 
       {/* Title */}
       <h1 className="font-serif text-[3.8rem] font-semibold uppercase leading-[1.05] tracking-[0.05em] text-charcoal whitespace-nowrap">
-        Il Casino Casalino
+        Il Casino Casalino B&B
       </h1>
       <p className="mt-3 font-serif text-[3.8rem] font-semibold uppercase leading-[1.05] tracking-[0.05em] text-charcoal">
         B&amp;B
@@ -71,7 +71,7 @@ function Sign() {
       {/* Logo */}
       <Image
         src="/logo.png"
-        alt="Il Casino Casalino"
+        alt="Il Casino Casalino B&B logo"
         width={150}
         height={150}
         className="mt-7 opacity-80"
@@ -163,9 +163,8 @@ function Dash({
 }) {
   return (
     <div
-      className={`absolute border-stone/40 ${v ? "border-l border-dashed" : ""} ${
-        h ? "border-t border-dashed" : ""
-      }`}
+      className={`absolute border-stone/40 ${v ? "border-l border-dashed" : ""} ${h ? "border-t border-dashed" : ""
+        }`}
       style={style}
     />
   );

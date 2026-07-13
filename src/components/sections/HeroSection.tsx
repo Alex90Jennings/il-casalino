@@ -29,13 +29,16 @@ export function HeroSection() {
         </p>
       </div>
 
-      {/* Contained hero image with subtle edge vignette */}
-      <div className="relative w-full aspect-[16/7] md:aspect-[21/8] overflow-hidden">
+      {/* Full-bleed hero, shorter than the source's 3:2 so the photo reads
+          smaller. Anchored at 25% down: the trim to fit the shorter frame is
+          split ~1/4 off the top, ~3/4 off the bottom — a small amount off the
+          top, more off the bottom. */}
+      <div className="relative w-full aspect-[16/9] overflow-hidden">
         <Image
           src={HERO_IMAGE.src}
           alt={HERO_IMAGE.alt[locale]}
           fill
-          className="object-cover object-center"
+          className="object-cover object-[50%_25%]"
           priority
           fetchPriority="high"
           sizes="100vw"

@@ -1,0 +1,31 @@
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { FloatingSidebar } from "@/components/ui/FloatingSidebar";
+import { HeroSection } from "@/components/sections/HeroSection";
+import { AboutSection } from "@/components/sections/AboutSection";
+import { GallerySection } from "@/components/sections/GallerySection";
+import { ServicesSection } from "@/components/sections/ServicesSection";
+import { RoomsSection } from "@/components/sections/RoomsSection";
+import { BookingSection } from "@/components/sections/BookingSection";
+import { HistorySection } from "@/components/sections/HistorySection";
+import { ContactSection } from "@/components/sections/ContactSection";
+
+export default function Home() {
+  return (
+    <>
+      <Navbar />
+      <FloatingSidebar />
+      <main>
+        <HeroSection />
+        <AboutSection />
+        <GallerySection />
+        <ServicesSection />
+        <RoomsSection />
+        <BookingSection />
+        <HistorySection />
+        <ContactSection />
+      </main>
+      <Footer />
+    </>
+  );
+}

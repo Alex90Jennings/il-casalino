@@ -38,8 +38,8 @@ const ROOM_ICONS: Record<RoomIcon, React.ReactNode> = {
 const VIDEOS_PER_ROOM = 3; // ROOM_GALLERY = Sole×3, Stella×3, Venere×3, Luna×3
 
 // Rooms reel — the same peek carousel as the first gallery, holding the twelve
-// room videos grouped by room. The room selector (as on main) navigates the
-// carousel to a room's first clip; the active clip keeps the selector in sync.
+// room videos grouped by room. The room icons are a read-only indicator of which
+// room is currently in focus; navigation is via the carousel arrows only.
 export function RoomsSection() {
   const { t, locale } = useLanguage();
 
@@ -54,7 +54,7 @@ export function RoomsSection() {
 
       <MediaCarousel
         items={ROOM_GALLERY}
-        renderAbove={({ activeIndex, goTo }) => {
+        renderAbove={({ activeIndex }) => {
           const activeRoom = ROOM_ORDER[Math.floor(activeIndex / VIDEOS_PER_ROOM)];
           return (
             <div className="overflow-x-auto mb-9">
@@ -63,35 +63,32 @@ export function RoomsSection() {
                 aria-label={t.rooms.heading}
                 className="flex w-max mx-auto gap-4 sm:gap-8 px-6 pb-1"
               >
-                {ROOM_ORDER.map((key, roomIdx) => {
+                {ROOM_ORDER.map((key) => {
                   const room = ROOMS[key];
-                  const selected = activeRoom === key;
+                  const active = activeRoom === key;
                   return (
-                    <button
+                    <div
                       key={key}
-                      type="button"
-                      onClick={() => goTo(roomIdx * VIDEOS_PER_ROOM)}
-                      aria-pressed={selected}
-                      aria-label={room.name[locale]}
-                      className="group flex flex-col items-center gap-2 focus:outline-none"
+                      aria-current={active ? "true" : undefined}
+                      className="flex flex-col items-center gap-2"
                     >
                       <span
                         className={`w-12 h-12 flex items-center justify-center rounded-full border transition-colors duration-300 ${
-                          selected
+                          active
                             ? "border-charcoal text-charcoal bg-charcoal/[0.04]"
-                            : "border-stone-light/70 text-stone/70 group-hover:border-stone group-hover:text-stone group-focus-visible:border-stone"
+                            : "border-stone-light/70 text-stone/40"
                         }`}
                       >
                         <span className="w-6 h-6">{ROOM_ICONS[room.icon]}</span>
                       </span>
                       <span
                         className={`text-[10px] tracking-[0.18em] uppercase transition-colors duration-300 ${
-                          selected ? "text-charcoal" : "text-stone/70 group-hover:text-stone"
+                          active ? "text-charcoal" : "text-stone/40"
                         }`}
                       >
                         {room.name[locale]}
                       </span>
-                    </button>
+                    </div>
                   );
                 })}
               </div>

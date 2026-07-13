@@ -2,7 +2,7 @@
 // Static source assertions — deliberately never reads or mutates process.env.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync } from "node:fs";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -55,11 +55,22 @@ test("footer renders literal name, address, phone and email (no env)", () => {
   assert.ok(!f.includes("process.env"), "no env in footer");
 });
 
-test("default locale is Italian, hard-coded (English toggle preserved)", () => {
+test("locale routing: /it default, /it + /en routes, toggle navigates, 404 → /it", () => {
+  const locales = read("src/lib/locales.ts");
+  assert.ok(/DEFAULT_LOCALE: Locale = "it"/.test(locales), "default locale is Italian");
+  assert.ok(/LOCALES: Locale\[\] = \["it", "en"\]/.test(locales), "Italian + English locales");
   const ctx = read("src/context/LanguageContext.tsx");
-  assert.ok(/useState<Locale>\("it"\)/.test(ctx), "default locale it");
   assert.ok(!ctx.includes("process.env"), "no env for locale");
-  assert.ok(/l === "it" \? "en" : "it"/.test(ctx), "it/en toggle preserved");
+  assert.ok(/router\.push\(`\/\$\{next\}/.test(ctx), "toggle navigates between locale routes");
+  assert.ok(/locale === "it" \? "en" : "it"/.test(ctx), "toggle swaps it ↔ en");
+  // Route files exist.
+  assert.ok(existsSync(path.join(root, "src/app/[locale]/page.tsx")), "[locale]/page route");
+  const localeLayout = read("src/app/[locale]/layout.tsx");
+  assert.ok(/generateStaticParams/.test(localeLayout) && /notFound\(\)/.test(localeLayout), "static params + invalid-locale 404");
+  assert.ok(/"x-default":\s*`\$\{BASE_URL\}\/it`/.test(localeLayout), "x-default hreflang → /it");
+  // Root and 404 both redirect to the default locale (/it).
+  assert.ok(/redirect\(`\/\$\{DEFAULT_LOCALE\}`\)/.test(read("src/app/page.tsx")), "root / redirects to /it");
+  assert.ok(/redirect\(`\/\$\{DEFAULT_LOCALE\}`\)/.test(read("src/app/not-found.tsx")), "404 redirects to /it");
 });
 
 test("none of the six public env variables are referenced anywhere in src", () => {

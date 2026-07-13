@@ -12,8 +12,9 @@ const SECTION_DIR = "src/components/sections";
 const sectionFiles = readdirSync(path.join(root, SECTION_DIR)).filter((f) => f.endsWith(".tsx"));
 
 const RENDERED = [
-  "src/app/page.tsx",
   "src/app/layout.tsx",
+  "src/app/[locale]/layout.tsx",
+  "src/app/[locale]/page.tsx",
   "src/components/seo/JsonLd.tsx",
   "src/components/layout/Navbar.tsx",
   "src/components/layout/MobileMenu.tsx",
@@ -72,9 +73,12 @@ test("hero is the optimised gate-entrance asset (not pool) and the only priority
 });
 
 test("Open Graph and JSON-LD reference the optimised gate-entrance image", () => {
+  const og = "/media/images/gate-entrance-1600.webp";
+  assert.ok(onDisk(og), "gate-entrance-1600.webp exists on disk");
   for (const rel of ["src/app/layout.tsx", "src/components/seo/JsonLd.tsx"]) {
     const src = read(rel);
-    assert.ok(src.includes("/media/images/gate-entrance-1600.webp"), `${rel} should use gate-entrance OG`);
+    assert.ok(src.includes(og), `${rel} should use the gate-entrance OG image`);
+    assert.ok(!src.includes("og-image"), `${rel} must not reference og-image.jpg`);
     assert.ok(!src.includes("pool-1600"), `${rel} must not reference a non-generated pool-1600`);
   }
 });
@@ -87,7 +91,9 @@ test("shared gallery reel: videos first then images, all files on disk", () => {
   const firstImageIdx = shared.findIndex((s) => s.kind === "image");
   assert.equal(shared[0].kind, "video", "a video leads the reel");
   assert.ok(shared.slice(0, firstImageIdx).every((s) => s.kind === "video"), "all videos precede the images");
-  assert.equal(shared[firstImageIdx].id, "pool", "pool leads the images");
+  assert.equal(shared[firstImageIdx].kind, "image", "images follow the videos");
+  const imageIds = shared.filter((s) => s.kind === "image").map((s) => s.id);
+  assert.ok(imageIds.includes("pool") && imageIds.includes("pool-garden"), "both pool photos in the reel");
   assert.ok(!shared.some((s) => s.id === "gate-entrance"), "hero image not repeated in the reel");
   for (const s of shared) {
     assert.ok(onDisk(s.src), `shared media missing: ${s.src}`);
@@ -128,12 +134,15 @@ test("rooms reel is the same carousel, holding all 12 room videos grouped in ord
     assert.ok(v.id.startsWith(stems[group]), `${v.id} at index ${i} not in group ${stems[group]}`);
     assert.ok(onDisk(v.src) && onDisk(v.poster), `missing room video/poster: ${v.id}`);
   });
-  // RoomsSection reuses the shared MediaCarousel with ROOM_GALLERY (muted autoplay)
-  // and keeps the room selector (navigates the carousel, syncs to the active clip).
+  // RoomsSection reuses the shared MediaCarousel with ROOM_GALLERY (muted autoplay).
+  // The room icons are a read-only indicator of the room in focus (synced to the
+  // active clip); navigation is via the carousel arrows only — no click-to-navigate.
   const r = read(`${SECTION_DIR}/RoomsSection.tsx`);
   assert.ok(/MediaCarousel/.test(r) && /ROOM_GALLERY/.test(r), "rooms uses the shared carousel");
-  assert.ok(/ROOM_ORDER\.map/.test(r) && /aria-pressed=\{selected\}/.test(r), "room selector present");
-  assert.ok(/goTo\(roomIdx \* VIDEOS_PER_ROOM\)/.test(r), "selector navigates to the room's first clip");
+  assert.ok(/ROOM_ORDER\.map/.test(r), "room indicator iterates the rooms");
+  assert.ok(/const activeRoom = ROOM_ORDER\[Math\.floor\(activeIndex/.test(r), "active room derived from the active clip");
+  assert.ok(/aria-current=\{active/.test(r), "active room marked with aria-current");
+  assert.ok(!/goTo\(/.test(r) && !/onClick/.test(r), "indicator is read-only — no click navigation");
   const mc = read("src/components/ui/MediaCarousel.tsx");
   assert.ok(mc.includes("LazyVideo"), "carousel plays videos via LazyVideo (muted autoplay)");
 });

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
-import { LanguageProvider } from "@/context/LanguageContext";
-import { JsonLd } from "@/components/seo/JsonLd";
 import { SITE_URL as BASE_URL } from "@/lib/site";
 
 const cormorant = Cormorant_Garamond({
@@ -21,11 +19,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Il Casino Casalino — Bed & Breakfast tradizionale a Francavilla Fontana, Puglia",
+    default: "Il Casino Casalino — B&B a Francavilla Fontana, Puglia",
     template: "%s | Il Casino Casalino",
   },
   description:
-    "Bed & breakfast tradizionale nel cuore della Puglia. Il Casino Casalino a Francavilla Fontana (Brindisi): camere con colazione, piscina e giardino per un soggiorno autentico tra storia e natura — ideale per il turismo in Salento e Valle d'Itria.",
+    "Bed & breakfast tradizionale a Francavilla Fontana (Brindisi), nel cuore della Puglia. Camere con colazione, piscina e giardino per un soggiorno autentico.",
   keywords: [
     "bed and breakfast francavilla fontana",
     "b&b francavilla fontana",
@@ -93,10 +91,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="it" className={`${cormorant.variable} ${inter.variable}`}>
-      <body className="bg-cream text-charcoal antialiased">
-        <JsonLd />
-        <LanguageProvider>{children}</LanguageProvider>
-      </body>
+      <body className="bg-cream text-charcoal antialiased">{children}</body>
     </html>
   );
 }

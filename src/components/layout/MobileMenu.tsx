@@ -12,6 +12,7 @@ const NAV_SECTIONS = [
   { key: "services" as const, sectionId: "services" },
   { key: "rooms" as const, sectionId: "rooms" },
   { key: "booking" as const, sectionId: "booking" },
+  { key: "history" as const, sectionId: "history" },
   { key: "contact" as const, sectionId: "contact" },
 ] as const;
 

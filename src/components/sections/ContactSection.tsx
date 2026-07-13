@@ -17,7 +17,7 @@ export function ContactSection() {
         </div>
 
         {/* Info strip — centered, like the reference */}
-        <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-16 mb-12 text-center">
+        <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-16 text-center">
           <div>
             <p className="text-[10px] tracking-[0.2em] uppercase text-stone mb-1.5">
               {t.contact.email}
@@ -49,59 +49,6 @@ export function ContactSection() {
             </a>
           </div>
         </div>
-
-        {/* Form */}
-        <form
-          className="max-w-2xl mx-auto space-y-5"
-          onSubmit={(e) => {
-            e.preventDefault();
-            // TODO: wire up to API or email service
-          }}
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div>
-              <label className="block text-[10px] tracking-[0.15em] uppercase text-stone mb-1.5">
-                {t.contact.form.name}
-              </label>
-              <input
-                type="text"
-                required
-                className="w-full border-b border-stone-light/70 bg-transparent px-0 py-2 text-sm text-charcoal placeholder-stone/35 focus:outline-none focus:border-stone transition-colors"
-                placeholder={t.contact.form.name}
-              />
-            </div>
-            <div>
-              <label className="block text-[10px] tracking-[0.15em] uppercase text-stone mb-1.5">
-                {t.contact.form.email}
-              </label>
-              <input
-                type="email"
-                required
-                className="w-full border-b border-stone-light/70 bg-transparent px-0 py-2 text-sm text-charcoal placeholder-stone/35 focus:outline-none focus:border-stone transition-colors"
-                placeholder={t.contact.form.email}
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-[10px] tracking-[0.15em] uppercase text-stone mb-1.5">
-              {t.contact.form.message}
-            </label>
-            <textarea
-              required
-              rows={4}
-              className="w-full border-b border-stone-light/70 bg-transparent px-0 py-2 text-sm text-charcoal placeholder-stone/35 focus:outline-none focus:border-stone transition-colors resize-none"
-              placeholder={t.contact.form.message}
-            />
-          </div>
-          <div className="text-center pt-2">
-            <button
-              type="submit"
-              className="px-10 py-2.5 bg-charcoal text-white text-[10px] tracking-[0.25em] uppercase hover:bg-charcoal/80 transition-colors"
-            >
-              {t.contact.form.send}
-            </button>
-          </div>
-        </form>
       </div>
     </section>
   );
