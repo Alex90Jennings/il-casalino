@@ -129,7 +129,6 @@ const SHARED_IMAGES: MediaImage[] = [
   img("cactus", LANDSCAPE, "Greenery", "Le piante", "Mediterranean plants around the property", "Piante mediterranee attorno alla proprietà"),
   img("francavilla", LANDSCAPE, "The property", "La proprietà", "Il Casino Casalino in the Puglian countryside", "Il Casino Casalino nella campagna pugliese"),
   img("pool", LANDSCAPE, "Pool", "Piscina", "The swimming pool set in the garden", "La piscina immersa nel giardino"),
-  img("pool-garden", LANDSCAPE, "Pool & garden", "Piscina e giardino", "The pool seen from the garden", "La piscina vista dal giardino"),
 ];
 
 // First gallery reel — videos first, then photos. Single source of ordering.
