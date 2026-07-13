@@ -16,10 +16,10 @@ export function ContactSection() {
           <div className="w-8 h-px bg-stone-light mx-auto" />
         </div>
 
-        {/* Info strip — centered, like the reference */}
-        <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-16 text-center">
+        {/* Info strip — three equal columns so the middle (address) sits dead centre */}
+        <div className="max-w-3xl mx-auto flex flex-col items-center gap-10 text-center md:grid md:grid-cols-3 md:items-start md:gap-8">
           <div>
-            <p className="text-[10px] tracking-[0.2em] uppercase text-stone mb-1.5">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-stone mb-2">
               {t.contact.email}
             </p>
             <a
@@ -30,7 +30,7 @@ export function ContactSection() {
             </a>
           </div>
           <div>
-            <p className="text-[10px] tracking-[0.2em] uppercase text-stone mb-1.5">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-stone mb-2">
               {t.contact.address}
             </p>
             <p className="text-xs text-charcoal/75 leading-relaxed max-w-[200px] mx-auto">
@@ -38,7 +38,7 @@ export function ContactSection() {
             </p>
           </div>
           <div>
-            <p className="text-[10px] tracking-[0.2em] uppercase text-stone mb-1.5">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-stone mb-2">
               {t.contact.phone}
             </p>
             <a
