@@ -314,5 +314,27 @@
         "bytes": 74626
       }
     ]
+  },
+  {
+    "source": "legacy/host.jpg",
+    "id": "host",
+    "role": "profile",
+    "sourceBytes": 25123869,
+    "sourceWidth": 5504,
+    "sourceHeight": 8256,
+    "outputs": [
+      {
+        "file": "media/images/host-400.webp",
+        "width": 400,
+        "height": 600,
+        "bytes": 22942
+      },
+      {
+        "file": "media/images/host-800.webp",
+        "width": 800,
+        "height": 1200,
+        "bytes": 63874
+      }
+    ]
   }
 ]
