@@ -46,7 +46,6 @@ const IMAGE_CONFIG: { file: string; from: SourceKey; id: string; role: Role }[] 
   { file: "gate-entrance.jpg", from: "legacy", id: "gate-entrance", role: "hero" },
   // Shared-area gallery reel (deliberate order: exteriors → interiors → dining → garden → setting).
   { file: "pool.jpg", from: "legacy", id: "pool", role: "gallery" },
-  { file: "pool-garden.jpg", from: "legacy", id: "pool-garden", role: "gallery" },
   { file: "courtyard.jpg", from: "legacy", id: "courtyard", role: "gallery" },
   { file: "angle.jpg", from: "shared", id: "angle", role: "gallery" },
   { file: "bell.jpg", from: "shared", id: "bell", role: "gallery" },

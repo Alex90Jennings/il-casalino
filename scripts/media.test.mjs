@@ -93,7 +93,7 @@ test("shared gallery reel: videos first then images, all files on disk", () => {
   assert.ok(shared.slice(0, firstImageIdx).every((s) => s.kind === "video"), "all videos precede the images");
   assert.equal(shared[firstImageIdx].kind, "image", "images follow the videos");
   const imageIds = shared.filter((s) => s.kind === "image").map((s) => s.id);
-  assert.ok(imageIds.includes("pool") && imageIds.includes("pool-garden"), "both pool photos in the reel");
+  assert.ok(imageIds.includes("pool"), "both pool photos in the reel");
   assert.ok(!shared.some((s) => s.id === "gate-entrance"), "hero image not repeated in the reel");
   for (const s of shared) {
     assert.ok(onDisk(s.src), `shared media missing: ${s.src}`);

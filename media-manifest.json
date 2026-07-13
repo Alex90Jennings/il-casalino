@@ -44,22 +44,6 @@
     ]
   },
   {
-    "source": "legacy/pool-garden.jpg",
-    "id": "pool-garden",
-    "role": "gallery",
-    "sourceBytes": 21376052,
-    "sourceWidth": 8024,
-    "sourceHeight": 5349,
-    "outputs": [
-      {
-        "file": "media/images/pool-garden-1280.webp",
-        "width": 1280,
-        "height": 853,
-        "bytes": 104716
-      }
-    ]
-  },
-  {
     "source": "legacy/courtyard.jpg",
     "id": "courtyard",
     "role": "gallery",
