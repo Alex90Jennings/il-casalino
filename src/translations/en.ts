@@ -23,9 +23,9 @@ export const en: Translations = {
   history: {
     heading: "History",
     paragraphs: [
-      "Built in 1706, Casino Casalino stands in the countryside between Oria and Francavilla Fontana, in an area shaped for centuries by rural estates, olive groves and old country roads. Its imposing walls, reaching approximately six metres in height in places, still reflect the strength and character of Puglia's historic buildings.",
-      "Over the centuries, the property has lived many different lives. It was once a church, later became stables and was subsequently used as a hunting lodge: a place of retreat and rest in the Salento countryside. For many years it was known as Casino Ferrante, before taking its present name, Casino Casalino.",
-      "Today, the building has become a B&B while retaining a strong connection to its past. Its ancient walls, intimate rooms and peaceful rural setting give the house an authentic and timeless atmosphere. A stay at Casino Casalino is an opportunity to experience a place that has not merely been restored, but has evolved over centuries while preserving its history.",
+      "Built in 1706, Casino Casalino stands in the countryside between Oria and Francavilla Fontana, in a landscape shaped for centuries by rural estates, olive groves and old country roads. Its imposing walls, reaching approximately six metres in places, still reflect the strength and character of Puglia’s historic buildings.",
+      "Over the centuries, the property has lived many different lives. It was once a church, later became stables and was subsequently used as a hunting lodge: a place of retreat, rest and escape in the Salento countryside. For many years it was known as Casino Ferrante, before taking its present name, Casino Casalino.",
+      "Today, the building is a B&B while retaining a strong connection to its past. Each room has a vaulted dome ceiling, preserving the distinctive architecture and sense of scale of the original structure, while the terrace offers a beautiful view towards Oria Castle across the surrounding countryside. Its ancient walls, intimate rooms and peaceful rural setting give the house an authentic and timeless atmosphere. A stay at Casino Casalino is an opportunity to experience a place that has not simply been restored, but has evolved over centuries while preserving its history, character and connection to the land.",
     ],
   },
   gallery: {

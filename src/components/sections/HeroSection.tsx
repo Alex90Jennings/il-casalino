@@ -12,13 +12,12 @@ export function HeroSection() {
       {/* Brand lockup */}
       <div className="text-center px-6 pt-10 pb-8">
         <div className="flex justify-center mb-4">
-          <Image
-            src="/logo.png"
-            alt="Il Casino Casalino"
-            width={56}
-            height={56}
-            className="opacity-55 w-12 h-12 md:w-14 md:h-14"
-            priority
+          {/* Logo tinted to match the stone/80 of the subtitle below, via a mask
+              so the mark takes the exact colour rather than a dimmed grey. */}
+          <div
+            role="img"
+            aria-label="Il Casino Casalino"
+            className="w-12 h-12 md:w-14 md:h-14 bg-stone/80 [mask:url(/logo.png)_center/contain_no-repeat] [-webkit-mask:url(/logo.png)_center/contain_no-repeat]"
           />
         </div>
         <h1 className="font-serif text-4xl md:text-5xl font-light tracking-[0.12em] text-charcoal uppercase mb-3">
