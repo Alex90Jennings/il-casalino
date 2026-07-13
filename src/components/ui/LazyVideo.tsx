@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState } from "react";
 import Image from "next/image";
+import { usePrefersReducedMotion } from "@/lib/reduced-motion";
 
 interface LazyVideoProps {
   src: string;
@@ -14,20 +15,6 @@ interface LazyVideoProps {
   /** The gallery is on screen — gates autoplay so nothing loads on initial page load. */
   inView: boolean;
   sizes?: string;
-}
-
-const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-
-function usePrefersReducedMotion(): boolean {
-  return useSyncExternalStore(
-    (onChange) => {
-      const mq = window.matchMedia(REDUCED_MOTION_QUERY);
-      mq.addEventListener("change", onChange);
-      return () => mq.removeEventListener("change", onChange);
-    },
-    () => window.matchMedia(REDUCED_MOTION_QUERY).matches,
-    () => false, // server snapshot — never autoplay-suppress during SSR
-  );
 }
 
 // The active carousel slide autoplays its clip muted and looped, with no player

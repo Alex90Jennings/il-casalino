@@ -135,14 +135,15 @@ test("rooms reel is the same carousel, holding all 12 room videos grouped in ord
     assert.ok(onDisk(v.src) && onDisk(v.poster), `missing room video/poster: ${v.id}`);
   });
   // RoomsSection reuses the shared MediaCarousel with ROOM_GALLERY (muted autoplay).
-  // The room icons are a read-only indicator of the room in focus (synced to the
-  // active clip); navigation is via the carousel arrows only — no click-to-navigate.
+  // The room icons live in RoomSelector: clicking one jumps the reel to that room's
+  // first clip, and the active icon tracks the clip in view (see room-nav.test.mjs).
   const r = read(`${SECTION_DIR}/RoomsSection.tsx`);
   assert.ok(/MediaCarousel/.test(r) && /ROOM_GALLERY/.test(r), "rooms uses the shared carousel");
-  assert.ok(/ROOM_ORDER\.map/.test(r), "room indicator iterates the rooms");
-  assert.ok(/const activeRoom = ROOM_ORDER\[Math\.floor\(activeIndex/.test(r), "active room derived from the active clip");
-  assert.ok(/aria-current=\{active/.test(r), "active room marked with aria-current");
-  assert.ok(!/goTo\(/.test(r) && !/onClick/.test(r), "indicator is read-only — no click navigation");
+  assert.ok(/RoomSelector/.test(r), "rooms renders the interactive room selector");
+  const sel = read("src/components/ui/RoomSelector.tsx");
+  assert.ok(/ROOM_ORDER\.map/.test(sel), "selector iterates the rooms");
+  assert.ok(/goTo\(/.test(sel) && /onClick/.test(sel), "icons navigate the reel on click");
+  assert.ok(/aria-current=\{active/.test(sel), "active room marked with aria-current");
   const mc = read("src/components/ui/MediaCarousel.tsx");
   assert.ok(mc.includes("LazyVideo"), "carousel plays videos via LazyVideo (muted autoplay)");
 });
