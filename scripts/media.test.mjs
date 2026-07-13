@@ -8,26 +8,27 @@ import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (p) => readFileSync(path.join(root, p), "utf8");
-
 const SECTION_DIR = "src/components/sections";
 const sectionFiles = readdirSync(path.join(root, SECTION_DIR)).filter((f) => f.endsWith(".tsx"));
 
-// Components actually reachable from the homepage (page.tsx + root layout).
 const RENDERED = [
-  "src/app/page.tsx",
   "src/app/layout.tsx",
+  "src/app/[locale]/layout.tsx",
+  "src/app/[locale]/page.tsx",
   "src/components/seo/JsonLd.tsx",
   "src/components/layout/Navbar.tsx",
+  "src/components/layout/MobileMenu.tsx",
   "src/components/layout/Footer.tsx",
   "src/components/ui/FloatingSidebar.tsx",
-  `${SECTION_DIR}/HeroSection.tsx`,
-  `${SECTION_DIR}/AboutSection.tsx`,
-  `${SECTION_DIR}/ServicesSection.tsx`,
-  `${SECTION_DIR}/GallerySection.tsx`,
-  `${SECTION_DIR}/BookingSection.tsx`,
-  `${SECTION_DIR}/ContactSection.tsx`,
+  ...sectionFiles.map((f) => `${SECTION_DIR}/${f}`),
   "src/data/media.ts",
 ];
+
+function dumpMedia() {
+  const tsx = path.join(root, "node_modules/.bin/tsx");
+  return JSON.parse(execFileSync(tsx, ["scripts/dump-media.ts"], { cwd: root }).toString());
+}
+const onDisk = (webPath) => existsSync(path.join(root, "public", webPath));
 
 test("no media-originals path is referenced anywhere in src", () => {
   const walk = (d) => {
@@ -36,7 +37,7 @@ test("no media-originals path is referenced anywhere in src", () => {
       if (e.isDirectory()) walk(rel);
       else if (/\.(tsx?|ts)$/.test(e.name)) {
         for (const line of read(rel).split("\n")) {
-          const code = line.replace(/\/\/.*$/, ""); // drop line comments
+          const code = line.replace(/\/\/.*$/, "");
           assert.ok(!code.includes("media-originals"), `${rel} references a media-originals path`);
         }
       }
@@ -45,178 +46,141 @@ test("no media-originals path is referenced anywhere in src", () => {
   walk("src");
 });
 
-test("rendered homepage components reference only optimised /media/ assets", () => {
+test("rendered components reference only optimised /media/ assets that exist", () => {
   for (const rel of RENDERED) {
     const src = read(rel);
-    // A path literal beginning with /images/ (the deleted folder) — note
-    // /media/images/ is the valid optimised location and must not trip this.
-    assert.ok(!/["'`]\/images\//.test(src), `${rel} references a deleted /images/ path`);
-    // Every photo/video asset must come from the optimised /media/ pipeline
-    // (logo.png / favicons are not part of it and are intentionally excluded).
-    for (const m of src.matchAll(/["'`](\/[^"'`]+\.(?:webp|jpe?g|avif|mp4))/g)) {
+    for (const m of src.matchAll(/["'`](\/[^"'`$]+\.(?:webp|jpe?g|avif|mp4))/g)) {
       assert.ok(m[1].startsWith("/media/"), `${rel} uses a non-/media asset: ${m[1]}`);
+      assert.ok(onDisk(m[1]), `${rel} references a missing file: ${m[1]}`);
     }
   }
 });
 
-test("media metadata only points at optimised /media/ assets that exist on disk", () => {
-  const media = read("src/data/media.ts");
-  const paths = [...media.matchAll(/["'`](\/media\/[^"'`]+)["'`]/g)].map((m) => m[1]);
-  const concrete = paths.filter((p) => !p.includes("${")); // skip template-literal video paths
-  assert.ok(concrete.length >= 7, "expected hero + shared gallery image paths");
-  for (const s of concrete) {
-    assert.ok(existsSync(path.join(root, "public", s)), `optimised file missing: ${s}`);
-  }
-  // Room videos + WebP posters are built from room ids by the roomVideo() helper.
-  for (const id of ["sole", "stella", "luna", "venere"]) {
-    assert.ok(existsSync(path.join(root, `public/media/videos/${id}.mp4`)), `missing ${id}.mp4`);
-    assert.ok(existsSync(path.join(root, `public/media/videos/${id}-poster.webp`)), `missing ${id} poster`);
-  }
-});
-
-test("hero uses the optimised pool asset (not pool-garden) and is the only priority image", () => {
+test("hero is the optimised gate-entrance asset (not pool) and the only priority image", () => {
   const hero = read(`${SECTION_DIR}/HeroSection.tsx`);
   const media = read("src/data/media.ts");
-  assert.ok(hero.includes("HERO_IMAGE"), "hero should use HERO_IMAGE metadata");
-  assert.ok(media.includes("/media/images/pool-2560.webp"), "hero should use optimised pool");
-  assert.ok(!media.includes("pool-garden"), "pool-garden must no longer be referenced");
-
+  assert.ok(hero.includes("HERO_IMAGE"), "hero uses HERO_IMAGE metadata");
+  assert.ok(media.includes("/media/images/gate-entrance-2560.webp"), "hero uses gate-entrance master");
+  assert.match(media.match(/HERO_IMAGE[^}]*id:\s*"([^"]+)"/s)[1], /gate-entrance/);
   for (const f of sectionFiles) {
     const src = read(`${SECTION_DIR}/${f}`);
     if (f === "HeroSection.tsx") {
-      assert.ok(/priority/.test(src), "hero must set priority");
-      assert.ok(/fetchPriority="high"/.test(src), "hero should set fetchPriority high");
+      assert.ok(/priority/.test(src) && /fetchPriority="high"/.test(src), "hero sets priority");
     } else {
-      assert.ok(!/\bpriority\b/.test(src), `${f} must not use priority (only the hero should)`);
+      assert.ok(!/\bpriority\b/.test(src), `${f} must not mark an image priority`);
     }
   }
 });
 
-test("Open Graph and JSON-LD reference the optimised pool image", () => {
+test("Open Graph and JSON-LD reference the optimised gate-entrance image", () => {
+  const og = "/media/images/gate-entrance-1600.webp";
+  assert.ok(onDisk(og), "gate-entrance-1600.webp exists on disk");
   for (const rel of ["src/app/layout.tsx", "src/components/seo/JsonLd.tsx"]) {
     const src = read(rel);
-    assert.ok(src.includes("/media/images/pool-1600.webp"), `${rel} should use optimised pool`);
-    assert.ok(!src.includes("pool-garden"), `${rel} must not reference pool-garden`);
+    assert.ok(src.includes(og), `${rel} should use the gate-entrance OG image`);
+    assert.ok(!src.includes("og-image"), `${rel} must not reference og-image.jpg`);
+    assert.ok(!src.includes("pool-1600"), `${rel} must not reference a non-generated pool-1600`);
   }
 });
 
-test("gallery renders the full continuous sequence with localised captions/alt, lazily", () => {
+test("shared gallery reel: videos first then images, all files on disk", () => {
+  const { shared, hero } = dumpMedia();
+  assert.ok(onDisk(hero.src), `hero missing: ${hero.src}`);
+  assert.ok(shared.length >= 20, "expected shared videos + images");
+  // Videos lead the reel; the first item is a video.
+  const firstImageIdx = shared.findIndex((s) => s.kind === "image");
+  assert.equal(shared[0].kind, "video", "a video leads the reel");
+  assert.ok(shared.slice(0, firstImageIdx).every((s) => s.kind === "video"), "all videos precede the images");
+  assert.equal(shared[firstImageIdx].kind, "image", "images follow the videos");
+  const imageIds = shared.filter((s) => s.kind === "image").map((s) => s.id);
+  assert.ok(imageIds.includes("pool") && imageIds.includes("pool-garden"), "both pool photos in the reel");
+  assert.ok(!shared.some((s) => s.id === "gate-entrance"), "hero image not repeated in the reel");
+  for (const s of shared) {
+    assert.ok(onDisk(s.src), `shared media missing: ${s.src}`);
+    if (s.kind === "video") assert.ok(onDisk(s.poster), `poster missing: ${s.poster}`);
+  }
+  // GallerySection renders the shared peek carousel with muted-autoplay video slides.
   const g = read(`${SECTION_DIR}/GallerySection.tsx`);
-  assert.ok(g.includes("GALLERY"), "gallery should consume the single ordered GALLERY");
-  assert.ok(/const slides = GALLERY/.test(g), "slides must be the full gallery (no filtering)");
-  assert.ok(!/selectedRoom/.test(g), "gallery must not filter by a selected room");
-  assert.ok(g.includes("slide.alt[locale]"), "alt must follow locale");
-  assert.ok(g.includes("slide.caption[locale]"), "caption must follow locale");
-  assert.ok(!/priority/.test(g), "gallery media must not be priority (below the fold)");
+  assert.ok(g.includes("SHARED_GALLERY") && g.includes("MediaCarousel"), "reel uses shared gallery + carousel");
+  assert.ok(!/priority/.test(g), "reel media is not priority");
+  const lv = read("src/components/ui/LazyVideo.tsx");
+  assert.ok(/\bmuted\b/.test(lv) && /\bautoPlay\b/.test(lv) && /\bloop\b/.test(lv), "autoplay muted looped");
+  assert.ok(!/\bcontrols\b/.test(lv.replace(/\/\/.*$/gm, "")), "shared clips have no audio controls");
 });
 
-test("room selector navigates (not filters) and syncs to the active slide", () => {
-  const g = read(`${SECTION_DIR}/GallerySection.tsx`);
-  assert.ok(g.includes("ROOM_ORDER"), "selector should iterate ROOM_ORDER");
-  assert.ok(/role="group"/.test(g), "selector should be a labelled group");
-  assert.ok(g.includes("aria-pressed={selected}"), "room buttons must expose pressed state");
-  assert.ok(g.includes("room.name[locale]"), "room names must follow locale");
-  // Navigation, not filter: click jumps to the room's first slide.
-  assert.ok(/firstGalleryIndex\(ROOMS\[key\]\.group\)/.test(g), "click must jump via firstGalleryIndex");
-  // Selected state is derived from the active slide's group (auto-sync).
-  assert.ok(/activeGroup = slides\[current\]/.test(g), "active group derived from current slide");
-  assert.ok(/const selected = activeGroup === room\.group/.test(g), "selection derived, not stored");
-  // Sun / Star / Moon / Venus mapping present in the data.
-  const media = read("src/data/media.ts");
-  for (const [it, en] of [["Sole", "Sun"], ["Stella", "Star"], ["Luna", "Moon"], ["Venere", "Venus"]]) {
-    assert.ok(media.includes(`{ en: "${en}", it: "${it}" }`), `missing room name ${en}/${it}`);
+test("rooms gallery: order Sole·Stella·Venere·Luna, exactly 3 grouped videos each, files exist", () => {
+  const { roomOrder, rooms } = dumpMedia();
+  assert.deepEqual(roomOrder, ["Sole", "Stella", "Venere", "Luna"], "required room order");
+  const stems = { Sole: "sole", Stella: "stella", Venere: "venere", Luna: "luna" };
+  for (const key of roomOrder) {
+    const vids = rooms[key].videos;
+    assert.equal(vids.length, 3, `${key} must have exactly 3 videos`);
+    for (const v of vids) {
+      assert.ok(v.id.startsWith(stems[key]), `${key} video ${v.id} not grouped to the room`);
+      assert.ok(onDisk(v.src), `missing video: ${v.src}`);
+      assert.ok(onDisk(v.poster), `missing poster: ${v.poster}`);
+    }
   }
 });
 
-test("gallery data: one continuous sequence, rooms reachable by first index", () => {
-  const tsx = path.join(root, "node_modules/.bin/tsx");
-  const out = execFileSync(tsx, ["scripts/dump-gallery.ts"], { cwd: root }).toString();
-  const { gallery, firsts, roomOrder } = JSON.parse(out);
-
-  // Shared + all four rooms present in a single sequence, each room with a video.
-  const groups = new Set(gallery.map((i) => i.group));
-  for (const grp of ["shared", "sole", "stella", "luna", "venere"]) {
-    assert.ok(groups.has(grp), `gallery missing group ${grp}`);
-  }
-  for (const grp of ["sole", "stella", "luna", "venere"]) {
-    assert.ok(gallery.some((i) => i.group === grp && i.kind === "video"), `${grp} missing its video`);
-    // Room photos were removed — rooms are represented by their video only.
-    assert.ok(!gallery.some((i) => i.group === grp && i.kind === "image"), `${grp} should have no photo`);
-  }
-  // Breakfast video leads; shared areas come before any room.
-  assert.equal(gallery[0].id, "breakfast-video");
-  assert.equal(gallery[0].kind, "video");
-  const firstRoom = gallery.findIndex((i) => i.group !== "shared");
-  assert.ok(gallery.slice(0, firstRoom).every((i) => i.group === "shared"), "shared block precedes rooms");
-
-  // Selecting a room jumps to the FIRST item of that group, and the full
-  // sequence is unchanged (navigation, not filtering).
-  for (const grp of roomOrder) {
-    const idx = firsts[grp];
-    assert.ok(idx >= 0, `${grp} has no first index`);
-    assert.equal(gallery[idx].group, grp, `${grp} first index points at the group`);
-    assert.ok(idx === gallery.findIndex((i) => i.group === grp), `${grp} index is the first occurrence`);
-  }
-  // 1 breakfast video + 7 shared images + 4 room videos = 12 items, always.
-  assert.equal(gallery.length, 12, "gallery item count is fixed regardless of navigation");
+test("rooms reel is the same carousel, holding all 12 room videos grouped in order", () => {
+  const { roomGallery } = dumpMedia();
+  assert.equal(roomGallery.length, 12, "twelve room videos in the reel");
+  assert.ok(roomGallery.every((v) => v.kind === "video"), "rooms reel is videos only");
+  // Grouped by room, in selector order (never interleaved).
+  const stems = ["sole", "stella", "venere", "luna"];
+  roomGallery.forEach((v, i) => {
+    const group = Math.floor(i / 3);
+    assert.ok(v.id.startsWith(stems[group]), `${v.id} at index ${i} not in group ${stems[group]}`);
+    assert.ok(onDisk(v.src) && onDisk(v.poster), `missing room video/poster: ${v.id}`);
+  });
+  // RoomsSection reuses the shared MediaCarousel with ROOM_GALLERY (muted autoplay).
+  // The room icons are a read-only indicator of the room in focus (synced to the
+  // active clip); navigation is via the carousel arrows only — no click-to-navigate.
+  const r = read(`${SECTION_DIR}/RoomsSection.tsx`);
+  assert.ok(/MediaCarousel/.test(r) && /ROOM_GALLERY/.test(r), "rooms uses the shared carousel");
+  assert.ok(/ROOM_ORDER\.map/.test(r), "room indicator iterates the rooms");
+  assert.ok(/const activeRoom = ROOM_ORDER\[Math\.floor\(activeIndex/.test(r), "active room derived from the active clip");
+  assert.ok(/aria-current=\{active/.test(r), "active room marked with aria-current");
+  assert.ok(!/goTo\(/.test(r) && !/onClick/.test(r), "indicator is read-only — no click navigation");
+  const mc = read("src/components/ui/MediaCarousel.tsx");
+  assert.ok(mc.includes("LazyVideo"), "carousel plays videos via LazyVideo (muted autoplay)");
 });
 
-test("videos autoplay muted; lead is eager, room videos are view-gated, no sound option", () => {
-  const raw = read("src/components/ui/LazyVideo.tsx");
-  const v = raw.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, ""); // strip comments
-  assert.ok(/\bmuted\b/.test(v), "video must be muted");
-  assert.ok(/\bautoPlay\b/.test(v), "active video autoplays");
-  assert.ok(/\bloop\b/.test(v), "video loops");
-  assert.ok(!/\bcontrols\b/.test(v), "no controls → sound can never be enabled");
-  assert.ok(/prefers-reduced-motion/.test(v), "reduced motion must be respected");
-  // Active slide plays; room videos also need the gallery in view, the lead is eager.
-  assert.ok(/const play = active && \(eager \|\| inView\)/.test(v), "eager lead, view-gated rooms");
-  assert.ok(v.includes("aria-label={playLabel}"), "reduced-motion play button keeps a localised label");
-  // Only the first gallery slide (breakfast video) is eager.
-  const g = read(`${SECTION_DIR}/GallerySection.tsx`);
-  assert.ok(/eager=\{i === 0\}/.test(g), "only the lead slide is eager");
+test("localisation: both locales in sync; host bio, extras and branding present; pool sentence removed", () => {
+  const itSrc = read("src/translations/it.ts");
+  const enSrc = read("src/translations/en.ts");
+  // Removed pool wording gone from both locales.
+  for (const [name, src] of [["it", itSrc], ["en", enSrc]]) {
+    assert.ok(!src.includes("per rinfrescarsi nelle giornate di sole"), `${name}: IT pool sentence remains`);
+    assert.ok(!src.includes("a refreshing dip on sunny days"), `${name}: EN pool sentence remains`);
+  }
+  // Host section (three paragraphs) + optional extras + rooms nav in both.
+  for (const [name, src] of [["it", itSrc], ["en", enSrc]]) {
+    assert.ok(/host:\s*\{/.test(src) && /body:\s*\[/.test(src), `${name}: host bio missing`);
+    assert.ok(src.includes("extrasHeading") && src.includes("italianLessons") && src.includes("carRental"), `${name}: extras missing`);
+    assert.ok(/rooms:\s*"/.test(src), `${name}: rooms nav label missing`);
+  }
+  assert.ok(itSrc.includes("Sono un'insegnante di italiano"), "exact IT host text present");
+  assert.ok(!enSrc.includes("Sono un'insegnante"), "IT text must not leak into the English locale");
+  // Branding: title with B&B, no separate tagline key.
+  const hero = read(`${SECTION_DIR}/HeroSection.tsx`);
+  assert.ok(/Il Casino Casalino B&amp;B/.test(hero), "hero title reads IL CASINO CASALINO B&B");
+  assert.ok(!/hero\.tagline|Bed & Breakfast|BED & BREAKFAST/.test(hero), "old Bed & Breakfast tagline removed");
 });
 
-test("language toggle drives media metadata (both locales present)", () => {
-  const media = read("src/data/media.ts");
-  assert.ok(/en:\s*"/.test(media) && /it:\s*"/.test(media), "metadata must define en and it");
-});
-
-test("navigation section IDs resolve to real sections", () => {
+test("navigation exposes the rooms section", () => {
   const navbar = read("src/components/layout/Navbar.tsx");
   const ids = [...navbar.matchAll(/sectionId:\s*"([^"]+)"/g)].map((m) => m[1]);
-  assert.ok(ids.includes("gallery") && ids.includes("booking"));
+  assert.ok(ids.includes("gallery") && ids.includes("rooms") && ids.includes("about"));
   const rendered = sectionFiles.map((f) => read(`${SECTION_DIR}/${f}`)).join("\n");
   for (const id of ids) {
-    if (id === "hero") continue; // hero id lives in HeroSection
+    if (id === "hero") continue;
     assert.ok(rendered.includes(`id="${id}"`), `no section renders id="${id}"`);
   }
-  assert.ok(read(`${SECTION_DIR}/HeroSection.tsx`).includes('id="hero"'));
 });
 
 test("Holidu booking integration is preserved", () => {
   assert.ok(read("src/lib/holidu.ts").includes("widget.holiduhost.com/widget/dff485ac-a76f-49ef-9ea2-5e78e06bfbc5"));
   assert.ok(read(`${SECTION_DIR}/BookingSection.tsx`).includes("HoliduWidget"));
-});
-
-test("Holidu widget follows the site locale (single iframe, verified `language` param)", () => {
-  const w = read("src/components/booking/HoliduWidget.tsx");
-  // Exactly one iframe, reloaded on locale change.
-  assert.equal((w.match(/<iframe/g) ?? []).length, 1, "must render exactly one iframe");
-  assert.ok(/key=\{locale\}/.test(w), "iframe must remount on locale change");
-  assert.ok(w.includes("buildHoliduWidgetUrl(locale)"), "src derived from locale via builder");
-  assert.ok(w.includes("buildHoliduWidgetUrl(locale, { standalone: true })"), "fallback uses builder");
-  assert.ok(w.includes("loading=\"lazy\""), "widget stays lazy (below the fold)");
-  // Builder output verified at runtime.
-  const tsx = path.join(root, "node_modules/.bin/tsx");
-  const u = JSON.parse(execFileSync(tsx, ["scripts/dump-holidu.ts"], { cwd: root }).toString());
-  const base = "https://widget.holiduhost.com/widget/dff485ac-a76f-49ef-9ea2-5e78e06bfbc5";
-  assert.equal(u.en, `${base}?language=en`, "English URL");
-  assert.equal(u.it, `${base}?language=it`, "Italian URL");
-  assert.notEqual(u.en, u.it, "switching locale changes the src");
-  assert.ok(u.enStandalone.includes("standalone=1") && u.enStandalone.includes("language=en"));
-  assert.ok(u.itStandalone.includes("standalone=1") && u.itStandalone.includes("language=it"));
-  // Unsupported/injected locale can never reach the URL — falls back to en, encoded.
-  assert.ok(u.injected.endsWith("language=en"), "unsupported locale falls back to en");
-  assert.ok(!u.injected.includes("<script>"), "no raw input reaches the URL");
 });

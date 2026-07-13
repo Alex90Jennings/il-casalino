@@ -11,10 +11,8 @@ interface LazyVideoProps {
   playLabel: string;
   /** Only the active carousel slide plays; others stay a poster. */
   active: boolean;
-  /** The gallery is scrolled into view — gates autoplay so room videos don't load on initial page load. */
+  /** The gallery is on screen — gates autoplay so nothing loads on initial page load. */
   inView: boolean;
-  /** Lead video: autoplay from page load (ignores inView) so it's already playing when reached. */
-  eager?: boolean;
   sizes?: string;
 }
 
@@ -32,19 +30,16 @@ function usePrefersReducedMotion(): boolean {
   );
 }
 
-// The active slide autoplays its room video muted and looped, with the native
-// player chrome omitted — so sound can never be enabled. The <video> only mounts
-// while the slide is active, so the MP4 is fetched on focus, never on initial
-// page load, and no more than one video ever plays at once. Reduced-motion users
-// are not autoplayed: they get a poster with a click-to-play button (still muted).
-export function LazyVideo({ src, poster, alt, playLabel, active, inView, eager, sizes }: LazyVideoProps) {
+// The active carousel slide autoplays its clip muted and looped, with no player
+// chrome — so it plays silently. The <video> only mounts while the slide is
+// active and the gallery is in view, so clips are fetched on focus, never on
+// initial page load, and only one plays at a time. Reduced-motion users are not
+// autoplayed: they get a poster with a click-to-play button (still muted).
+export function LazyVideo({ src, poster, alt, playLabel, active, inView, sizes }: LazyVideoProps) {
   const reducedMotion = usePrefersReducedMotion();
   const [clicked, setClicked] = useState(false);
 
-  // Autoplay when this slide is active. Room videos also require the gallery to be
-  // on screen (so they don't load on initial page load); the eager lead video
-  // starts from page load so it's already playing by the time it's scrolled to.
-  const play = active && (eager || inView) && (!reducedMotion || clicked);
+  const play = active && inView && (!reducedMotion || clicked);
 
   if (play) {
     return (
@@ -79,7 +74,6 @@ export function LazyVideo({ src, poster, alt, playLabel, active, inView, eager, 
         sizes={sizes}
       />
       {active && reducedMotion ? (
-        // Reduced motion: explicit, keyboard-operable play button (still muted).
         <button
           type="button"
           onClick={(e) => {
@@ -92,7 +86,6 @@ export function LazyVideo({ src, poster, alt, playLabel, active, inView, eager, 
           {glyph}
         </button>
       ) : (
-        // Non-active slide: badge hint so the poster reads as a video.
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
           {glyph}
         </div>

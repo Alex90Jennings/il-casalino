@@ -9,11 +9,16 @@ import { scrollToSection } from "@/lib/scroll";
 const NAV_SECTIONS = [
   { key: "home" as const, sectionId: "hero" },
   { key: "about" as const, sectionId: "about" },
-  { key: "services" as const, sectionId: "services" },
   { key: "gallery" as const, sectionId: "gallery" },
+  { key: "services" as const, sectionId: "services" },
+  { key: "rooms" as const, sectionId: "rooms" },
   { key: "booking" as const, sectionId: "booking" },
+  { key: "history" as const, sectionId: "history" },
   { key: "contact" as const, sectionId: "contact" },
 ];
+
+// Left of the centre logo: home · about · gallery · services. Right: the rest.
+const NAV_SPLIT = 4;
 
 export function Navbar() {
   const { t } = useLanguage();
@@ -29,14 +34,13 @@ export function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-30 transition-shadow duration-300 bg-nav ${
-          scrolled ? "shadow-sm" : ""
-        }`}
+        className={`fixed top-0 left-0 right-0 z-30 transition-shadow duration-300 bg-nav ${scrolled ? "shadow-sm" : ""
+          }`}
       >
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
           {/* Desktop nav — left */}
-          <nav className="hidden md:flex items-center gap-8">
-            {NAV_SECTIONS.slice(0, 3).map(({ key, sectionId }) => (
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+            {NAV_SECTIONS.slice(0, NAV_SPLIT).map(({ key, sectionId }) => (
               <button
                 key={key}
                 onClick={() => scrollToSection(sectionId)}
@@ -52,12 +56,12 @@ export function Navbar() {
             onClick={() => scrollToSection("hero")}
             className="absolute left-1/2 -translate-x-1/2 text-[11px] tracking-[0.2em] uppercase text-white/85 hover:text-white transition-colors font-medium"
           >
-            Il Casino Casalino
+            Il Casino Casalino B&B
           </button>
 
           {/* Desktop nav — right */}
-          <nav className="hidden md:flex items-center gap-8">
-            {NAV_SECTIONS.slice(3).map(({ key, sectionId }) => (
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+            {NAV_SECTIONS.slice(NAV_SPLIT).map(({ key, sectionId }) => (
               <button
                 key={key}
                 onClick={() => scrollToSection(sectionId)}

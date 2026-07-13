@@ -9,35 +9,25 @@ export function Footer() {
   return (
     <footer id="footer" className="bg-charcoal text-white/60">
       <div className="max-w-7xl mx-auto px-6 py-12">
-        {/* Top row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+        {/* Top row — brand left, contact right */}
+        <div className="flex flex-col items-center gap-8 text-center md:flex-row md:items-start md:justify-between md:text-left mb-10">
           {/* Brand */}
           <div>
             <p className="text-white text-sm tracking-[0.15em] uppercase mb-3">
-              {process.env.NEXT_PUBLIC_SITE_NAME ?? "Il Casino Casalino"}
+              Il Casino Casalino B&B
             </p>
             <p className="text-xs leading-relaxed">
-              {process.env.NEXT_PUBLIC_BUSINESS_ADDRESS}
+              Contrada Casalino, 18, 72021, Francavilla Fontana BR, Italy
             </p>
           </div>
 
           {/* Contact */}
-          <div>
+          <div className="md:text-right">
             <p className="text-white text-xs tracking-widest uppercase mb-3">
               {t.contact.heading}
             </p>
-            <p className="text-xs mb-1">{process.env.NEXT_PUBLIC_BUSINESS_PHONE}</p>
-            <p className="text-xs">{process.env.NEXT_PUBLIC_BUSINESS_EMAIL}</p>
-          </div>
-
-          {/* Links placeholder */}
-          <div className="flex flex-col gap-2 text-xs">
-            <button className="text-left hover:text-white transition-colors">
-              {t.footer.privacy}
-            </button>
-            <button className="text-left hover:text-white transition-colors">
-              {t.footer.cookie}
-            </button>
+            <p className="text-xs mb-1">+393277755170</p>
+            <p className="text-xs">ilcasinocasalino@gmail.com</p>
           </div>
         </div>
 

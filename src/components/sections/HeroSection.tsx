@@ -5,7 +5,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { HERO_IMAGE } from "@/data/media";
 
 export function HeroSection() {
-  const { t, locale } = useLanguage();
+  const { locale } = useLanguage();
 
   return (
     <section id="hero" className="bg-cream pt-14">
@@ -15,30 +15,30 @@ export function HeroSection() {
           <Image
             src="/logo.png"
             alt="Il Casino Casalino"
-            width={32}
-            height={32}
-            className="opacity-55"
+            width={56}
+            height={56}
+            className="opacity-55 w-12 h-12 md:w-14 md:h-14"
             priority
           />
         </div>
-        <p className="text-[11px] tracking-[0.3em] uppercase text-stone mb-3">
-          {t.hero.tagline}
-        </p>
         <h1 className="font-serif text-4xl md:text-5xl font-light tracking-[0.12em] text-charcoal uppercase mb-3">
-          Il Casino Casalino
+          Il Casino Casalino B&amp;B
         </h1>
-        <p className="text-sm font-serif italic text-stone/80 tracking-[0.12em]">
+        <p className="text-xl md:text-2xl font-serif italic text-stone/80 tracking-[0.12em]">
           Francavilla Fontana, Puglia
         </p>
       </div>
 
-      {/* Contained hero image with subtle edge vignette */}
-      <div className="relative w-full aspect-[16/7] md:aspect-[21/8] overflow-hidden">
+      {/* Full-bleed hero, shorter than the source's 3:2 so the photo reads
+          smaller. Anchored at 25% down: the trim to fit the shorter frame is
+          split ~1/4 off the top, ~3/4 off the bottom — a small amount off the
+          top, more off the bottom. */}
+      <div className="relative w-full aspect-[16/9] overflow-hidden">
         <Image
           src={HERO_IMAGE.src}
           alt={HERO_IMAGE.alt[locale]}
           fill
-          className="object-cover object-center"
+          className="object-cover object-[50%_25%]"
           priority
           fetchPriority="high"
           sizes="100vw"
