@@ -20,6 +20,8 @@ import sharp, { type Metadata } from "sharp";
 const SOURCE_DIRS = {
   shared: path.resolve("media-originals/shared-area"),
   legacy: path.resolve("media-originals/images"),
+  // Past-event photos, one subfolder per event.
+  events: path.resolve("media-originals/events"),
 } as const;
 type SourceKey = keyof typeof SOURCE_DIRS;
 
@@ -37,13 +39,17 @@ const ROLE_WIDTHS = {
   gallery: [1280],
   // Small portrait avatar (1x/2x) — the host profile photo, shown in a circle.
   profile: [400, 800],
+  // Portrait event photos (WhatsApp exports, 900–1280px wide). 900 is the
+  // narrowest source, so every photo gets the same master without enlarging.
+  event: [900],
 } as const;
 
 type Role = keyof typeof ROLE_WIDTHS;
 
 // Curated set only, in a deliberate order. `id` is the output basename so
 // components never depend on the (sometimes messy) source filenames.
-const IMAGE_CONFIG: { file: string; from: SourceKey; id: string; role: Role }[] = [
+// `trim` crops uniform letterbox bars baked into some phone exports.
+const IMAGE_CONFIG: { file: string; from: SourceKey; id: string; role: Role; trim?: boolean }[] = [
   // Hero — the arched stone entrance gate.
   { file: "gate-entrance.jpg", from: "legacy", id: "gate-entrance", role: "hero" },
   // Shared-area gallery reel (deliberate order: exteriors → interiors → dining → garden → setting).
@@ -67,6 +73,20 @@ const IMAGE_CONFIG: { file: string; from: SourceKey; id: string; role: Role }[] 
   { file: "francavilla_fontana-casale_casalino@@010022.jpg", from: "shared", id: "francavilla", role: "gallery" },
   // Host portrait — Simona, shown as a circular profile photo in the About section.
   { file: "host.jpg", from: "legacy", id: "host", role: "profile" },
+  // Past event — yoga evening under the stars, ordered dusk → night. The
+  // 4-photo collage (PHOTO-2026-09-09-08-32-52 3.jpg) is left out: it repeats
+  // shots already in the reel.
+  { file: "yoga/PHOTO-2026-09-09-08-32-51.jpg", from: "events", id: "yoga-1", role: "event" },
+  { file: "yoga/PHOTO-2026-09-09-08-32-52.jpg", from: "events", id: "yoga-2", role: "event" },
+  { file: "yoga/PHOTO-2026-09-09-08-32-51 2.jpg", from: "events", id: "yoga-3", role: "event" },
+  { file: "yoga/PHOTO-2026-09-09-08-32-51 4.jpg", from: "events", id: "yoga-4", role: "event" },
+  { file: "yoga/PHOTO-2026-09-09-08-32-52 2.jpg", from: "events", id: "yoga-5", role: "event" },
+  { file: "yoga/PHOTO-2026-09-09-08-32-51 5.jpg", from: "events", id: "yoga-6", role: "event" },
+  { file: "yoga/PHOTO-2026-09-09-08-32-52 5.jpg", from: "events", id: "yoga-7", role: "event" },
+  { file: "yoga/PHOTO-2026-09-09-08-32-52 6.jpg", from: "events", id: "yoga-8", role: "event", trim: true },
+  { file: "yoga/PHOTO-2026-09-09-08-32-51 6.jpg", from: "events", id: "yoga-9", role: "event" },
+  { file: "yoga/PHOTO-2026-09-09-08-32-52 4.jpg", from: "events", id: "yoga-10", role: "event" },
+  { file: "yoga/PHOTO-2026-09-09-08-32-51 3.jpg", from: "events", id: "yoga-11", role: "event" },
 ];
 
 function fmtBytes(n: number): string {
@@ -98,15 +118,18 @@ async function main() {
   let totalSrc = 0;
   let totalOut = 0;
 
-  for (const { file, from, id, role } of IMAGE_CONFIG) {
+  for (const { file, from, id, role, trim } of IMAGE_CONFIG) {
     const srcPath = path.join(SOURCE_DIRS[from], file);
     if (!existsSync(srcPath)) {
       console.error(`✗ Missing source, skipping: ${from}/${file}`);
       continue;
     }
 
-    const srcBuf = await readFile(srcPath);
-    const srcBytes = srcBuf.length;
+    const raw = await readFile(srcPath);
+    const srcBuf = trim
+      ? await sharp(raw, { failOn: "error" }).rotate().trim({ background: "#000000", threshold: 20 }).toBuffer()
+      : raw;
+    const srcBytes = raw.length;
     let meta: Metadata;
     try {
       meta = await sharp(srcBuf, { failOn: "error" }).metadata();

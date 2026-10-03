@@ -22,6 +22,7 @@ export function RoomsSection() {
 
       <MediaCarousel
         items={ROOM_GALLERY}
+        showCaptions
         renderAbove={({ activeIndex, goTo }) => (
           <RoomSelector activeIndex={activeIndex} goTo={goTo} />
         )}

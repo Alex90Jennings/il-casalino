@@ -7,8 +7,12 @@ import { LazyVideo } from "@/components/ui/LazyVideo";
 import { usePrefersReducedMotion } from "@/lib/reduced-motion";
 import type { SharedItem } from "@/data/media";
 
-// Slide takes 76% of container width; ~12% peeks each side.
-const SLIDE_RATIO = 0.76;
+// Landscape: slide takes 76% of container width; ~12% peeks each side.
+// Portrait (4:5 phone photos) needs a narrower slide on wide screens so it
+// isn't taller than the viewport; phones keep a large slide. Container height
+// is slide width × 1.25 (4:5), set by the pb-[…] classes below.
+const SLIDE_RATIO = { landscape: 0.76, portrait: 0.42, portraitNarrow: 0.7 } as const;
+const NARROW_W = 640;
 const GAP = 16; // px between slides
 
 function normalizeOffset(i: number, current: number, total: number): number {
@@ -23,13 +27,18 @@ interface MediaCarouselProps {
   /** Optional controls rendered above the carousel (e.g. the room selector).
       Receives the active slide index and a goTo(index) navigator. */
   renderAbove?: (api: { activeIndex: number; goTo: (i: number) => void }) => React.ReactNode;
+  /** Slide shape. Portrait suits phone photos (e.g. past events). */
+  shape?: "landscape" | "portrait";
+  /** Overlay the active slide's caption. Only the rooms reel uses it, where the
+      caption names the room; elsewhere the photos speak for themselves. */
+  showCaptions?: boolean;
 }
 
 // Large peek carousel of images and muted-autoplay videos. Only the active slide
 // plays; playback is gated on the carousel being in view so nothing loads on the
 // initial page render. Touch (swipe), arrow buttons and dots are all keyboard-
 // and pointer-accessible. Used by both the shared reel and the rooms reel.
-export function MediaCarousel({ items, renderAbove }: MediaCarouselProps) {
+export function MediaCarousel({ items, renderAbove, shape = "landscape", showCaptions = false }: MediaCarouselProps) {
   const { t, locale } = useLanguage();
   const reducedMotion = usePrefersReducedMotion();
   const total = items.length;
@@ -58,7 +67,12 @@ export function MediaCarousel({ items, renderAbove }: MediaCarouselProps) {
     return () => io.disconnect();
   }, []);
 
-  const slideW = containerW * SLIDE_RATIO;
+  const portrait = shape === "portrait";
+  const ratio = portrait
+    ? containerW < NARROW_W ? SLIDE_RATIO.portraitNarrow : SLIDE_RATIO.portrait
+    : SLIDE_RATIO.landscape;
+  const slideW = containerW * ratio;
+  const sizes = portrait ? "(max-width: 640px) 70vw, 430px" : "(max-width: 768px) 85vw, 70vw";
   const centerX = (containerW - slideW) / 2;
 
   // Animated jump: step one slide at a time toward a target so selecting a
@@ -116,8 +130,7 @@ export function MediaCarousel({ items, renderAbove }: MediaCarouselProps) {
       <div className="max-w-5xl mx-auto">
         <div
           ref={containerRef}
-          className="relative"
-          style={{ paddingBottom: "57%" }}
+          className={`relative ${portrait ? "pb-[87.5%] sm:pb-[52.5%]" : "pb-[57%]"}`}
           onPointerDown={onPointerDown}
           onPointerUp={onPointerUp}
         >
@@ -159,7 +172,7 @@ export function MediaCarousel({ items, renderAbove }: MediaCarouselProps) {
                         fill
                         className="object-cover object-center select-none"
                         draggable={false}
-                        sizes="(max-width: 768px) 85vw, 70vw"
+                        sizes={sizes}
                       />
                     ) : (
                       <LazyVideo
@@ -169,7 +182,7 @@ export function MediaCarousel({ items, renderAbove }: MediaCarouselProps) {
                         playLabel={`${t.gallery.playVideo} — ${slide.caption[locale]}`}
                         active={isActive && !animating}
                         inView={inView}
-                        sizes="(max-width: 768px) 85vw, 70vw"
+                        sizes={sizes}
                       />
                     )}
 
@@ -182,7 +195,7 @@ export function MediaCarousel({ items, renderAbove }: MediaCarouselProps) {
                         }}
                       />
                     )}
-                    {isActive && (
+                    {isActive && showCaptions && (
                       <div className="absolute bottom-0 left-0 right-0 flex justify-center pb-3 pointer-events-none">
                         <span className="text-[9px] tracking-[0.22em] uppercase text-white/75 bg-charcoal/20 px-3 py-1 backdrop-blur-sm">
                           {slide.caption[locale]}

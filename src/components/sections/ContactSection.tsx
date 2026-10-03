@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
+import { ContactForm } from "@/components/ui/ContactForm";
 
 export function ContactSection() {
   const { t } = useLanguage();
@@ -48,6 +49,13 @@ export function ContactSection() {
               +393277755170
             </a>
           </div>
+        </div>
+
+        <div className="mt-16">
+          <h3 className="text-center text-[10px] tracking-[0.2em] uppercase text-stone mb-8">
+            {t.contactForm.heading}
+          </h3>
+          <ContactForm />
         </div>
       </div>
     </section>

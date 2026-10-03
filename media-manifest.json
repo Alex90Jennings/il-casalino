@@ -336,5 +336,181 @@
         "bytes": 63874
       }
     ]
+  },
+  {
+    "source": "events/yoga/PHOTO-2026-09-09-08-32-51.jpg",
+    "id": "yoga-1",
+    "role": "event",
+    "sourceBytes": 165623,
+    "sourceWidth": 1066,
+    "sourceHeight": 1600,
+    "outputs": [
+      {
+        "file": "media/images/yoga-1-900.webp",
+        "width": 900,
+        "height": 1351,
+        "bytes": 70966
+      }
+    ]
+  },
+  {
+    "source": "events/yoga/PHOTO-2026-09-09-08-32-52.jpg",
+    "id": "yoga-2",
+    "role": "event",
+    "sourceBytes": 171889,
+    "sourceWidth": 1066,
+    "sourceHeight": 1600,
+    "outputs": [
+      {
+        "file": "media/images/yoga-2-900.webp",
+        "width": 900,
+        "height": 1351,
+        "bytes": 76828
+      }
+    ]
+  },
+  {
+    "source": "events/yoga/PHOTO-2026-09-09-08-32-51 2.jpg",
+    "id": "yoga-3",
+    "role": "event",
+    "sourceBytes": 208558,
+    "sourceWidth": 1280,
+    "sourceHeight": 1600,
+    "outputs": [
+      {
+        "file": "media/images/yoga-3-900.webp",
+        "width": 900,
+        "height": 1125,
+        "bytes": 71336
+      }
+    ]
+  },
+  {
+    "source": "events/yoga/PHOTO-2026-09-09-08-32-51 4.jpg",
+    "id": "yoga-4",
+    "role": "event",
+    "sourceBytes": 120277,
+    "sourceWidth": 1280,
+    "sourceHeight": 1600,
+    "outputs": [
+      {
+        "file": "media/images/yoga-4-900.webp",
+        "width": 900,
+        "height": 1125,
+        "bytes": 38334
+      }
+    ]
+  },
+  {
+    "source": "events/yoga/PHOTO-2026-09-09-08-32-52 2.jpg",
+    "id": "yoga-5",
+    "role": "event",
+    "sourceBytes": 151739,
+    "sourceWidth": 1280,
+    "sourceHeight": 1600,
+    "outputs": [
+      {
+        "file": "media/images/yoga-5-900.webp",
+        "width": 900,
+        "height": 1125,
+        "bytes": 45216
+      }
+    ]
+  },
+  {
+    "source": "events/yoga/PHOTO-2026-09-09-08-32-51 5.jpg",
+    "id": "yoga-6",
+    "role": "event",
+    "sourceBytes": 263008,
+    "sourceWidth": 1280,
+    "sourceHeight": 1600,
+    "outputs": [
+      {
+        "file": "media/images/yoga-6-900.webp",
+        "width": 900,
+        "height": 1125,
+        "bytes": 105684
+      }
+    ]
+  },
+  {
+    "source": "events/yoga/PHOTO-2026-09-09-08-32-52 5.jpg",
+    "id": "yoga-7",
+    "role": "event",
+    "sourceBytes": 252194,
+    "sourceWidth": 1280,
+    "sourceHeight": 1600,
+    "outputs": [
+      {
+        "file": "media/images/yoga-7-900.webp",
+        "width": 900,
+        "height": 1125,
+        "bytes": 98198
+      }
+    ]
+  },
+  {
+    "source": "events/yoga/PHOTO-2026-09-09-08-32-52 6.jpg",
+    "id": "yoga-8",
+    "role": "event",
+    "sourceBytes": 155171,
+    "sourceWidth": 966,
+    "sourceHeight": 1210,
+    "outputs": [
+      {
+        "file": "media/images/yoga-8-900.webp",
+        "width": 900,
+        "height": 1127,
+        "bytes": 78700
+      }
+    ]
+  },
+  {
+    "source": "events/yoga/PHOTO-2026-09-09-08-32-51 6.jpg",
+    "id": "yoga-9",
+    "role": "event",
+    "sourceBytes": 195982,
+    "sourceWidth": 1066,
+    "sourceHeight": 1600,
+    "outputs": [
+      {
+        "file": "media/images/yoga-9-900.webp",
+        "width": 900,
+        "height": 1351,
+        "bytes": 96860
+      }
+    ]
+  },
+  {
+    "source": "events/yoga/PHOTO-2026-09-09-08-32-52 4.jpg",
+    "id": "yoga-10",
+    "role": "event",
+    "sourceBytes": 117498,
+    "sourceWidth": 902,
+    "sourceHeight": 1600,
+    "outputs": [
+      {
+        "file": "media/images/yoga-10-900.webp",
+        "width": 900,
+        "height": 1596,
+        "bytes": 61788
+      }
+    ]
+  },
+  {
+    "source": "events/yoga/PHOTO-2026-09-09-08-32-51 3.jpg",
+    "id": "yoga-11",
+    "role": "event",
+    "sourceBytes": 215305,
+    "sourceWidth": 1280,
+    "sourceHeight": 1600,
+    "outputs": [
+      {
+        "file": "media/images/yoga-11-900.webp",
+        "width": 900,
+        "height": 1125,
+        "bytes": 72574
+      }
+    ]
   }
 ]

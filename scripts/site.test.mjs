@@ -1,4 +1,5 @@
-// Asserts the site's public configuration is hard-coded (no env vars) and correct.
+// Asserts the site's public configuration is hard-coded (no env vars, bar the
+// contact action's Resend secret) and correct.
 // Static source assertions — deliberately never reads or mutates process.env.
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -75,6 +76,19 @@ test("locale routing: /it default, /it + /en routes, toggle navigates, 404 → /
   assert.ok(/redirect\(`\/\$\{DEFAULT_LOCALE\}`\)/.test(read("src/app/not-found.tsx")), "404 redirects to /it");
 });
 
+// The contact-form server action is the single exception: the Resend API key is
+// a secret, so it can't be a literal. It may read exactly these three names.
+const ENV_EXCEPTION = "src/lib/contact-action.ts";
+const CONTACT_ENV = ["RESEND_API_KEY", "CONTACT_FROM_EMAIL", "CONTACT_TO_EMAIL"];
+
+test("contact action reads only the three Resend variables and runs server-side", () => {
+  const src = read(ENV_EXCEPTION);
+  assert.ok(src.startsWith('"use server";'), "contact action is a server action");
+  const used = [...src.matchAll(/process\.env\.([A-Z_]+)/g)].map((m) => m[1]);
+  assert.deepEqual([...new Set(used)].sort(), [...CONTACT_ENV].sort());
+  assert.ok(!/NEXT_PUBLIC_/.test(src), "never exposed to the client");
+});
+
 test("none of the six public env variables are referenced anywhere in src", () => {
   const names = [
     "NEXT_PUBLIC_BUSINESS_ADDRESS",
@@ -90,7 +104,8 @@ test("none of the six public env variables are referenced anywhere in src", () =
       if (e.isDirectory()) walk(rel);
       else if (/\.(tsx?|mjs|js)$/.test(e.name)) {
         const src = read(rel);
-        assert.ok(!/process\.env/.test(src), `${rel} still reads process.env`);
+        if (rel !== ENV_EXCEPTION) assert.ok(!/process\.env/.test(src), `${rel} still reads process.env`);
+        assert.ok(!/NEXT_PUBLIC_/.test(src), `${rel} uses a NEXT_PUBLIC_ variable`);
         for (const n of names) assert.ok(!src.includes(n), `${rel} references ${n}`);
       }
     }

@@ -8,6 +8,7 @@ import { ServicesSection } from "@/components/sections/ServicesSection";
 import { RoomsSection } from "@/components/sections/RoomsSection";
 import { BookingSection } from "@/components/sections/BookingSection";
 import { HistorySection } from "@/components/sections/HistorySection";
+import { PastEventsSection } from "@/components/sections/PastEventsSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 
 export default function Home() {
@@ -23,6 +24,7 @@ export default function Home() {
         <RoomsSection />
         <BookingSection />
         <HistorySection />
+        <PastEventsSection />
         <ContactSection />
       </main>
       <Footer />

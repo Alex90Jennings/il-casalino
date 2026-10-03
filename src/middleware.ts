@@ -13,19 +13,27 @@ import { LOCALE_COOKIE, resolveLocale } from "@/lib/locale-detection";
 //   3. Italian fallback
 // The redirect is temporary (307), so the choice is re-evaluated each visit and
 // a later cookie change takes effect immediately.
+//
+// /events and /{locale}/events are shareable shortcuts to the past-events
+// section: they redirect to /{locale}#events (the locale resolved as above when
+// the path doesn't name one).
 export function middleware(req: NextRequest) {
-  const firstSegment = req.nextUrl.pathname.split("/")[1];
-  if ((LOCALES as string[]).includes(firstSegment)) {
+  const segments = req.nextUrl.pathname.split("/");
+  const firstSegment = segments[1];
+  const hasLocale = (LOCALES as string[]).includes(firstSegment);
+  const rest = segments.slice(hasLocale ? 2 : 1).join("/");
+  const eventsShortcut = rest === "events";
+  if (hasLocale && !eventsShortcut) {
     return NextResponse.next();
   }
 
-  const target = resolveLocale(
-    req.cookies.get(LOCALE_COOKIE)?.value,
-    req.headers.get("accept-language"),
-  );
+  const target = hasLocale
+    ? firstSegment
+    : resolveLocale(req.cookies.get(LOCALE_COOKIE)?.value, req.headers.get("accept-language"));
 
   const url = req.nextUrl.clone();
   url.pathname = `/${target}`;
+  if (eventsShortcut) url.hash = "events";
   return NextResponse.redirect(url); // preserves the query string via clone()
 }
 

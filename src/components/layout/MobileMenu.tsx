@@ -3,18 +3,7 @@
 import { useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageToggle } from "@/components/ui/LanguageToggle";
-import { scrollToSection } from "@/lib/scroll";
-
-const NAV_SECTIONS = [
-  { key: "home" as const, sectionId: "hero" },
-  { key: "about" as const, sectionId: "about" },
-  { key: "gallery" as const, sectionId: "gallery" },
-  { key: "services" as const, sectionId: "services" },
-  { key: "rooms" as const, sectionId: "rooms" },
-  { key: "booking" as const, sectionId: "booking" },
-  { key: "history" as const, sectionId: "history" },
-  { key: "contact" as const, sectionId: "contact" },
-] as const;
+import { NAV_ITEMS, useNavigate, type NavItem } from "./nav-items";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -23,16 +12,17 @@ interface MobileMenuProps {
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { t } = useLanguage();
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 
-  const handleNav = (sectionId: string) => {
+  const handleNav = (item: NavItem) => {
     onClose();
     // Brief delay lets the menu close before scroll starts
-    setTimeout(() => scrollToSection(sectionId), 120);
+    setTimeout(() => navigate(item), 120);
   };
 
   return (
@@ -61,13 +51,13 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </div>
 
         <nav className="flex flex-col gap-1 px-7 flex-1">
-          {NAV_SECTIONS.map(({ key, sectionId }) => (
+          {NAV_ITEMS.map((item) => (
             <button
-              key={key}
-              onClick={() => handleNav(sectionId)}
+              key={item.key}
+              onClick={() => handleNav(item)}
               className="text-left text-[11px] tracking-[0.18em] uppercase text-white/70 hover:text-white py-3 border-b border-white/8 transition-colors"
             >
-              {t.nav[key]}
+              {t.nav[item.key]}
             </button>
           ))}
         </nav>

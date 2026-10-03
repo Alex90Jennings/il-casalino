@@ -33,6 +33,11 @@ body {
   overflow-x: hidden;
 }
 
+/* Hash links (/it#rooms from another page) land below the fixed 56px nav. */
+section[id] {
+  scroll-margin-top: 3.5rem;
+}
+
 body {
   background-color: var(--color-cream);
   color: var(--color-charcoal);

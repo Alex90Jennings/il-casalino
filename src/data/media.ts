@@ -229,3 +229,31 @@ export const ROOMS: Record<RoomKey, RoomMedia> = {
 export const ROOM_GALLERY: SharedItem[] = ROOM_ORDER.flatMap((key) =>
   ROOMS[key].videos.map((v) => ({ kind: "video" as const, ...v })),
 );
+
+// Past events — portrait phone photos, so they render in the carousel's portrait
+// shape. Ordered dusk → night, matching the optimise-media config.
+const EVENT_PORTRAIT = { width: 900, height: 1125 };
+
+function eventImg(id: string, altEn: string, altIt: string): MediaImage {
+  return {
+    id,
+    src: `/media/images/${id}-900.webp`,
+    ...EVENT_PORTRAIT,
+    caption: { en: "Yoga under the stars", it: "Yoga sotto le stelle" },
+    alt: { en: altEn, it: altIt },
+  };
+}
+
+export const YOGA_EVENT_GALLERY: SharedItem[] = [
+  eventImg("yoga-1", "Guests meditating on the steps beside the garden at dusk", "Ospiti in meditazione sui gradini accanto al giardino al tramonto"),
+  eventImg("yoga-2", "The instructor welcoming guests by the pool", "L'insegnante accoglie gli ospiti a bordo piscina"),
+  eventImg("yoga-3", "A side stretch on yoga mats beside the pool", "Un allungamento laterale sui tappetini a bordo piscina"),
+  eventImg("yoga-4", "Guests in warrior pose on the lit terrace steps", "Ospiti nella posizione del guerriero sui gradini illuminati"),
+  eventImg("yoga-5", "Arms raised by the pool in front of the historic house", "Braccia al cielo a bordo piscina davanti alla dimora storica"),
+  eventImg("yoga-6", "Guests stretching among the garden grasses", "Ospiti che si allungano tra le erbe del giardino"),
+  eventImg("yoga-7", "Seated meditation on the lawn", "Meditazione seduta sul prato"),
+  eventImg("yoga-8", "The group seated on the terrace as evening falls", "Il gruppo seduto sulla terrazza al calar della sera"),
+  eventImg("yoga-9", "Child's pose on the lawn by candlelight", "Posizione del bambino sul prato a lume di candela"),
+  eventImg("yoga-10", "Hands joined overhead as the lights come on", "Mani giunte sopra la testa mentre si accendono le luci"),
+  eventImg("yoga-11", "Final relaxation on the steps under the night sky", "Rilassamento finale sui gradini sotto il cielo notturno"),
+].map((i) => ({ kind: "image" as const, ...i }));

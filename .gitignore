@@ -58,3 +58,5 @@ media-originals/
 # claude / ai local state
 .claude/
 CLAUDE.md
+
+.env

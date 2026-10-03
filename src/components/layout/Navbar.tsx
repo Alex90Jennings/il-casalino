@@ -4,24 +4,14 @@ import { useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageToggle } from "@/components/ui/LanguageToggle";
 import { MobileMenu } from "./MobileMenu";
-import { scrollToSection } from "@/lib/scroll";
+import { NAV_ITEMS, useNavigate } from "./nav-items";
 
-const NAV_SECTIONS = [
-  { key: "home" as const, sectionId: "hero" },
-  { key: "about" as const, sectionId: "about" },
-  { key: "gallery" as const, sectionId: "gallery" },
-  { key: "services" as const, sectionId: "services" },
-  { key: "rooms" as const, sectionId: "rooms" },
-  { key: "booking" as const, sectionId: "booking" },
-  { key: "history" as const, sectionId: "history" },
-  { key: "contact" as const, sectionId: "contact" },
-];
-
-// Left of the centre logo: home · about · gallery · services. Right: the rest.
+// Left group: home · about · gallery · services. Right: the rest + language toggle.
 const NAV_SPLIT = 4;
 
 export function Navbar() {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -40,34 +30,34 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
           {/* Desktop nav — left */}
           <nav className="hidden md:flex items-center gap-6 lg:gap-8">
-            {NAV_SECTIONS.slice(0, NAV_SPLIT).map(({ key, sectionId }) => (
+            {NAV_ITEMS.slice(0, NAV_SPLIT).map((item) => (
               <button
-                key={key}
-                onClick={() => scrollToSection(sectionId)}
+                key={item.key}
+                onClick={() => navigate(item)}
                 className="text-[11px] tracking-[0.18em] uppercase text-white/70 hover:text-white transition-colors"
               >
-                {t.nav[key]}
+                {t.nav[item.key]}
               </button>
             ))}
           </nav>
 
-          {/* Logo — center */}
+          {/* Logo — center, mobile only; on desktop the nav items fill the bar */}
           <button
-            onClick={() => scrollToSection("hero")}
-            className="absolute left-1/2 -translate-x-1/2 text-[11px] tracking-[0.2em] uppercase text-white/85 hover:text-white transition-colors font-medium"
+            onClick={() => navigate(NAV_ITEMS[0])}
+            className="md:hidden absolute left-1/2 -translate-x-1/2 text-[11px] tracking-[0.2em] uppercase text-white/85 hover:text-white transition-colors font-medium"
           >
             Il Casino Casalino B&B
           </button>
 
           {/* Desktop nav — right */}
           <nav className="hidden md:flex items-center gap-6 lg:gap-8">
-            {NAV_SECTIONS.slice(NAV_SPLIT).map(({ key, sectionId }) => (
+            {NAV_ITEMS.slice(NAV_SPLIT).map((item) => (
               <button
-                key={key}
-                onClick={() => scrollToSection(sectionId)}
+                key={item.key}
+                onClick={() => navigate(item)}
                 className="text-[11px] tracking-[0.18em] uppercase text-white/70 hover:text-white transition-colors"
               >
-                {t.nav[key]}
+                {t.nav[item.key]}
               </button>
             ))}
             <LanguageToggle />

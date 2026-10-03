@@ -7,6 +7,7 @@ export const it = {
     rooms: "Camere",
     booking: "Prenota",
     history: "La storia",
+    events: "Eventi",
     contact: "Contatti",
   },
   host: {
@@ -83,8 +84,32 @@ export const it = {
     phone: "Telefono",
     email: "Email",
   },
+  contactForm: {
+    heading: "Scrivici",
+    name: "Nome",
+    email: "Email",
+    message: "Messaggio",
+    send: "Invia",
+    sending: "Invio in corso…",
+    success: "Grazie! Abbiamo ricevuto il tuo messaggio e ti risponderemo al più presto.",
+    invalid: "Controlla di aver inserito nome, un indirizzo email valido e un messaggio.",
+    failed: "Qualcosa è andato storto. Riprova oppure scrivici a ilcasinocasalino@gmail.com.",
+  },
+  events: {
+    heading: "Eventi passati",
+    intro: "Momenti speciali vissuti insieme a Il Casino Casalino.",
+    yoga: {
+      title: "Moonlight Flow — Yoga sotto le stelle",
+      date: "Giovedì 27 agosto 2026",
+      summary: [
+        "Una serata di yoga all'aperto guidata da Tamara Molendini, insegnante di yoga, in collaborazione con Yantra Studio.",
+        "Dopo l'accoglienza alle 18:30, alle 19:00 abbiamo praticato yoga al tramonto tra il giardino e la piscina. Alle 20:00 è seguito un rituale di purificazione sotto la luce della luna, con tutto il materiale preparato e incluso, e la serata si è conclusa con un aperitivo a bordo piscina.",
+      ],
+    },
+  },
   footer: {
     rights: "© {{year}} Il Casino Casalino. Tutti i diritti riservati.",
+    vat: "P.IVA {{vat}}",
   },
 };
 

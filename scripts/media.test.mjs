@@ -171,7 +171,8 @@ test("localisation: both locales in sync; host bio, extras and branding present;
 });
 
 test("navigation exposes the rooms section", () => {
-  const navbar = read("src/components/layout/Navbar.tsx");
+  // Navbar and MobileMenu share NAV_ITEMS.
+  const navbar = read("src/components/layout/nav-items.ts");
   const ids = [...navbar.matchAll(/sectionId:\s*"([^"]+)"/g)].map((m) => m[1]);
   assert.ok(ids.includes("gallery") && ids.includes("rooms") && ids.includes("about"));
   const rendered = sectionFiles.map((f) => read(`${SECTION_DIR}/${f}`)).join("\n");
