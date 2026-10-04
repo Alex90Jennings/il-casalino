@@ -1,4 +1,5 @@
 import type { Translations } from "./it";
+import { privacyEn } from "./privacy-en";
 
 export const en: Translations = {
   nav: {
@@ -96,6 +97,10 @@ export const en: Translations = {
     success: "Thank you! We've received your message and will get back to you soon.",
     invalid: "Please enter your name, a valid email address and a message.",
     failed: "Something went wrong. Please try again or email us at ilcasinocasalino@gmail.com.",
+    limited: "You've sent several messages in a short time. Please try again in a few minutes or email us at ilcasinocasalino@gmail.com.",
+    challenge: "We couldn't verify your submission. Please reload the page and try again.",
+    privacyNote: "We'll use your details only to reply to your enquiry.",
+    privacyLink: "Privacy policy",
   },
   events: {
     heading: "Past events",
@@ -112,5 +117,7 @@ export const en: Translations = {
   footer: {
     rights: "© {{year}} Il Casino Casalino. All rights reserved.",
     vat: "P.IVA {{vat}}",
+    privacy: "Privacy & cookies",
   },
+  privacy: privacyEn,
 };

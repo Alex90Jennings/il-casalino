@@ -36,7 +36,7 @@ test("rejects missing or malformed fields; honeypot is spam", () => {
 });
 
 test("there is exactly one contact form, in the home Contact section", () => {
-  assert.ok(read("src/components/sections/ContactSection.tsx").includes("<ContactForm />"));
+  assert.ok(/<ContactForm\b/.test(read("src/components/sections/ContactSection.tsx")));
   const sections = ["PastEventsSection", "HistorySection", "BookingSection"];
   for (const s of sections) assert.ok(!read(`src/components/sections/${s}.tsx`).includes("ContactForm"));
 });
@@ -46,5 +46,5 @@ test("/events and /{locale}/events redirect to the past-events section", () => {
   assert.ok(/rest === "events"/.test(mw), "matches the /events shortcut");
   assert.ok(/url\.hash = "events"/.test(mw), "lands on #events");
   const page = read("src/app/[locale]/page.tsx");
-  assert.ok(/<HistorySection \/>\s*<PastEventsSection \/>\s*<ContactSection \/>/.test(page), "events sit between history and contact");
+  assert.ok(/<HistorySection \/>\s*<PastEventsSection \/>\s*<ContactSection\b[^>]*\/>/.test(page), "events sit between history and contact");
 });

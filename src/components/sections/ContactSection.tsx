@@ -3,7 +3,7 @@
 import { useLanguage } from "@/context/LanguageContext";
 import { ContactForm } from "@/components/ui/ContactForm";
 
-export function ContactSection() {
+export function ContactSection({ turnstileSiteKey }: { turnstileSiteKey: string | null }) {
   const { t } = useLanguage();
 
   return (
@@ -55,7 +55,7 @@ export function ContactSection() {
           <h3 className="text-center text-[10px] tracking-[0.2em] uppercase text-stone mb-8">
             {t.contactForm.heading}
           </h3>
-          <ContactForm />
+          <ContactForm turnstileSiteKey={turnstileSiteKey} />
         </div>
       </div>
     </section>

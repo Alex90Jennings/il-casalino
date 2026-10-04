@@ -1,14 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { sendContact, type ContactState } from "@/lib/contact-action";
+import { TurnstileWidget } from "@/components/ui/TurnstileWidget";
 
 const INPUT =
   "w-full bg-transparent border-b border-stone-light/70 py-2.5 text-sm text-charcoal placeholder:text-stone/60 focus:outline-none focus:border-stone transition-colors";
 const LABEL = "block text-[10px] tracking-[0.2em] uppercase text-stone mb-1";
 
-export function ContactForm() {
+export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey: string | null }) {
   const { t, locale } = useLanguage();
   const [state, action, pending] = useActionState<ContactState, FormData>(sendContact, { status: "idle" });
   const f = t.contactForm;
@@ -44,11 +46,20 @@ export function ContactForm() {
         <textarea id="contact-message" name="message" required maxLength={5000} rows={5} className={`${INPUT} resize-y`} />
       </div>
 
-      {(state.status === "invalid" || state.status === "failed") && (
+      {turnstileSiteKey && <TurnstileWidget siteKey={turnstileSiteKey} language={locale} resetSignal={state} />}
+
+      {state.status !== "idle" && (
         <p role="alert" className="text-xs text-red-800/80 text-center">
-          {state.status === "invalid" ? f.invalid : f.failed}
+          {f[state.status]}
         </p>
       )}
+
+      <p className="text-[11px] font-light leading-relaxed text-stone text-center">
+        {f.privacyNote}{" "}
+        <Link href={`/${locale}/privacy`} className="underline underline-offset-4 decoration-stone-light/70 hover:text-charcoal">
+          {f.privacyLink}
+        </Link>
+      </p>
 
       <div className="text-center">
         <button

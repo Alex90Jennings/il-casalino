@@ -1,3 +1,5 @@
+import { privacyIt } from "./privacy-it";
+
 export const it = {
   nav: {
     home: "Home",
@@ -94,6 +96,10 @@ export const it = {
     success: "Grazie! Abbiamo ricevuto il tuo messaggio e ti risponderemo al più presto.",
     invalid: "Controlla di aver inserito nome, un indirizzo email valido e un messaggio.",
     failed: "Qualcosa è andato storto. Riprova oppure scrivici a ilcasinocasalino@gmail.com.",
+    limited: "Hai inviato troppi messaggi in poco tempo. Riprova tra qualche minuto oppure scrivici a ilcasinocasalino@gmail.com.",
+    challenge: "Non siamo riusciti a verificare l’invio. Ricarica la pagina e riprova.",
+    privacyNote: "Useremo i tuoi dati solo per rispondere alla tua richiesta.",
+    privacyLink: "Informativa privacy",
   },
   events: {
     heading: "Eventi passati",
@@ -110,7 +116,9 @@ export const it = {
   footer: {
     rights: "© {{year}} Il Casino Casalino. Tutti i diritti riservati.",
     vat: "P.IVA {{vat}}",
+    privacy: "Privacy e cookie",
   },
+  privacy: privacyIt,
 };
 
 export type Translations = typeof it;

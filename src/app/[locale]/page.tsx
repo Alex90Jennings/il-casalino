@@ -10,6 +10,7 @@ import { BookingSection } from "@/components/sections/BookingSection";
 import { HistorySection } from "@/components/sections/HistorySection";
 import { PastEventsSection } from "@/components/sections/PastEventsSection";
 import { ContactSection } from "@/components/sections/ContactSection";
+import { turnstileSiteKey } from "@/lib/turnstile";
 
 export default function Home() {
   return (
@@ -25,7 +26,7 @@ export default function Home() {
         <BookingSection />
         <HistorySection />
         <PastEventsSection />
-        <ContactSection />
+        <ContactSection turnstileSiteKey={turnstileSiteKey()} />
       </main>
       <Footer />
     </>

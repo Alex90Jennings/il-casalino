@@ -76,12 +76,30 @@ test("locale routing: /it default, /it + /en routes, toggle navigates, 404 → /
   assert.ok(/redirect\(`\/\$\{DEFAULT_LOCALE\}`\)/.test(read("src/app/not-found.tsx")), "404 redirects to /it");
 });
 
-// The contact-form server action is the single exception: the Resend API key is
-// a secret, so it can't be a literal. It may read exactly these three names.
+// The contact-form server action is the single exception: its secrets (Resend,
+// the Turnstile secret, Upstash) can't be literals. It may read exactly these names.
 const ENV_EXCEPTION = "src/lib/contact-action.ts";
-const CONTACT_ENV = ["RESEND_API_KEY", "CONTACT_FROM_EMAIL", "CONTACT_TO_EMAIL"];
+const CONTACT_ENV = [
+  "RESEND_API_KEY",
+  "CONTACT_FROM_EMAIL",
+  "CONTACT_TO_EMAIL",
+  "TURNSTILE_SECRET_KEY",
+  "UPSTASH_REDIS_REST_URL",
+  "UPSTASH_REDIS_REST_TOKEN",
+];
 
-test("contact action reads only the three Resend variables and runs server-side", () => {
+// The Turnstile site key is the other exception: public, but kept in the
+// environment so it can be rotated in Vercel. Read once, server-side, by the page.
+const SITE_KEY_EXCEPTION = "src/lib/turnstile.ts";
+
+test("turnstile.ts reads only TURNSTILE_SITE_KEY, and no client file imports it", () => {
+  const src = read(SITE_KEY_EXCEPTION);
+  const used = [...src.matchAll(/process\.env\.([A-Z_]+)/g)].map((m) => m[1]);
+  assert.deepEqual([...new Set(used)], ["TURNSTILE_SITE_KEY"]);
+  assert.ok(!read("src/components/ui/ContactForm.tsx").includes("@/lib/turnstile"), "the key reaches the form as a prop");
+});
+
+test("contact action reads only its secret variables and runs server-side", () => {
   const src = read(ENV_EXCEPTION);
   assert.ok(src.startsWith('"use server";'), "contact action is a server action");
   const used = [...src.matchAll(/process\.env\.([A-Z_]+)/g)].map((m) => m[1]);
@@ -104,7 +122,7 @@ test("none of the six public env variables are referenced anywhere in src", () =
       if (e.isDirectory()) walk(rel);
       else if (/\.(tsx?|mjs|js)$/.test(e.name)) {
         const src = read(rel);
-        if (rel !== ENV_EXCEPTION) assert.ok(!/process\.env/.test(src), `${rel} still reads process.env`);
+        if (rel !== ENV_EXCEPTION && rel !== SITE_KEY_EXCEPTION) assert.ok(!/process\.env/.test(src), `${rel} still reads process.env`);
         assert.ok(!/NEXT_PUBLIC_/.test(src), `${rel} uses a NEXT_PUBLIC_ variable`);
         for (const n of names) assert.ok(!src.includes(n), `${rel} references ${n}`);
       }

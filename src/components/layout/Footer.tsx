@@ -1,11 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 
 const VAT_NUMBER = "08684360723";
 
 export function Footer() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const year = new Date().getFullYear();
 
   return (
@@ -15,6 +16,10 @@ export function Footer() {
           {t.footer.rights.replace("{{year}}", String(year))}
           <span className="mx-2" aria-hidden="true">·</span>
           {t.footer.vat.replace("{{vat}}", VAT_NUMBER)}
+          <span className="mx-2" aria-hidden="true">·</span>
+          <Link href={`/${locale}/privacy`} className="underline underline-offset-4 decoration-white/30 hover:text-white transition-colors">
+            {t.footer.privacy}
+          </Link>
         </p>
       </div>
     </footer>
